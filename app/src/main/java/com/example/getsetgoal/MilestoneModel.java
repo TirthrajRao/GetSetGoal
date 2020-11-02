@@ -4,15 +4,18 @@ import java.io.Serializable;
 
 public class MilestoneModel implements Serializable {
 
-    int milestoneNumber,milstonedays;
+    int milestoneNumber;
+    int milstonedays;
+    int milestone_iscomplete;
     String milestoneText,milestoneStartdate,milestoneEnddate;
 
-    public MilestoneModel(int milestoneNumber, int milstonedays, String milestoneText, String milestoneStartdate, String milestoneEnddate) {
+    public MilestoneModel(int milestoneNumber, int milstonedays, String milestoneText, String milestoneStartdate, String milestoneEnddate,int milestone_iscomplete) {
         this.milestoneNumber = milestoneNumber;
         this.milstonedays = milstonedays;
         this.milestoneText = milestoneText;
         this.milestoneStartdate = milestoneStartdate;
         this.milestoneEnddate = milestoneEnddate;
+        this.milestone_iscomplete=milestone_iscomplete;
     }
 
     public MilestoneModel(int milstonedays, String milestoneText) {
@@ -58,5 +61,13 @@ public class MilestoneModel implements Serializable {
 
     public void setMilestoneEnddate(String milestoneEnddate) {
         this.milestoneEnddate = milestoneEnddate;
+    }
+
+    public int getMilestone_iscomplete() {
+        return milestone_iscomplete;
+    }
+
+    public void setMilestone_iscomplete(int milestone_iscomplete) {
+        this.milestone_iscomplete = milestone_iscomplete;
     }
 }

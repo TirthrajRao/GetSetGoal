@@ -38,9 +38,9 @@ public class EditReviewDetails extends AppCompatActivity {
         goaltitle = findViewById(R.id.reviewtitle);
         confirmandcreate = findViewById(R.id.confirmandcreate);
 
-        database = openOrCreateDatabase("goaldata", Context.MODE_PRIVATE, null);
+        database = openOrCreateDatabase("goalDb", Context.MODE_PRIVATE, null);
         database.execSQL("create table  if not exists GoalDetails (Goal_id integer primary key autoincrement,Goal_Name text,Goal_Startdate text,Goal_Enddate text,Goal_State integer default 1,GoalCreatedDate text,GoalUpdatedDate text)");
-        database.execSQL("create table  if not exists MilestoneDetails (Milestone_id integer primary key autoincrement,Goal_id integer,Milestone_Number integer,Milestone_Text text,Milestone_Days integer,Milestone_Startdate text,Milestone_Enddate text,foreign key(Goal_id) references GoalDetails(Goal_id))");
+        database.execSQL("create table  if not exists MilestoneDetails (Milestone_id integer primary key autoincrement,Goal_id integer,Milestone_Number integer,Milestone_Text text,Milestone_Days integer,Milestone_Startdate text,Milestone_Enddate text,Milestone_Iscomplete integer,foreign key(Goal_id) references GoalDetails(Goal_id))");
 
 
         final String sdate = getIntent().getStringExtra("startdate");
@@ -108,7 +108,7 @@ public class EditReviewDetails extends AppCompatActivity {
                 database.execSQL("update GoalDetails set Goal_Enddate ='"+edate+"',GoalUpdatedDate = '"+createddate+"' where Goal_id ='"+id+"'");
 
                 for (int j = 0; j < milestonedata.size(); j++) {
-                    database.execSQL("insert into MilestoneDetails (Goal_id,Milestone_Number,Milestone_Text,Milestone_Days,Milestone_Startdate,Milestone_Enddate) values ('" + id + "','" + milestonedata.get(j).getMilestoneNumber() + "','" + milestonedata.get(j).getMilestoneText()+ "','" +milestonedata.get(j).getMilstonedays()+ "','" + milestonedata.get(j).getMilestoneStartdate()+ "','" + milestonedata.get(j).getMilestoneEnddate() + "')");
+                    database.execSQL("insert into MilestoneDetails (Goal_id,Milestone_Number,Milestone_Text,Milestone_Days,Milestone_Startdate,Milestone_Enddate,Milestone_Iscomplete) values ('" + id + "','" + milestonedata.get(j).getMilestoneNumber() + "','" + milestonedata.get(j).getMilestoneText()+ "','" +milestonedata.get(j).getMilstonedays()+ "','" + milestonedata.get(j).getMilestoneStartdate()+ "','" + milestonedata.get(j).getMilestoneEnddate() + "','" + 0 + "')");
                 }
 
 

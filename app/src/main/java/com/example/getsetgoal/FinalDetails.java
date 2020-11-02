@@ -39,9 +39,9 @@ public class FinalDetails extends AppCompatActivity {
         tab = findViewById(R.id.tabs);
         vp = findViewById(R.id.vp);
 
-        database = openOrCreateDatabase("goaldata", Context.MODE_PRIVATE, null);
+        database = openOrCreateDatabase("goalDb", Context.MODE_PRIVATE, null);
         database.execSQL("create table  if not exists GoalDetails (Goal_id integer primary key autoincrement,Goal_Name text,Goal_Startdate text,Goal_Enddate text,Goal_State integer default 1,GoalCreatedDate text,GoalUpdatedDate text)");
-        database.execSQL("create table  if not exists MilestoneDetails (Milestone_id integer primary key autoincrement,Goal_id integer,Milestone_Number integer,Milestone_Text text,Milestone_Days integer,Milestone_Startdate text,Milestone_Enddate text,foreign key(Goal_id) references GoalDetails(Goal_id))");
+        database.execSQL("create table  if not exists MilestoneDetails (Milestone_id integer primary key autoincrement,Goal_id integer,Milestone_Number integer,Milestone_Text text,Milestone_Days integer,Milestone_Startdate text,Milestone_Enddate text,Milestone_Iscomplete integer,foreign key(Goal_id) references GoalDetails(Goal_id))");
 
         Cursor cur = database.rawQuery("select * from GoalDetails ", null);
         if (cur != null) {
@@ -110,13 +110,15 @@ public class FinalDetails extends AppCompatActivity {
                     int milestonedaysindex = cur1.getColumnIndex("Milestone_Days");
                     int milestonestartdateindex = cur1.getColumnIndex("Milestone_Startdate");
                     int milestoneenddateindex = cur1.getColumnIndex("Milestone_Enddate");
+                    int milestoneIscompletedindex = cur1.getColumnIndex("Milestone_Iscomplete");
                     while (cur1.moveToNext()) {
                         int milestonenumber = cur1.getInt(milestonenumberindex);
                         String milestonetext = cur1.getString(milestonetextindex);
                         int milestonedays = cur1.getInt(milestonedaysindex);
                         String milestonestartdate = cur1.getString(milestonestartdateindex);
                         String milestoneenddate = cur1.getString(milestoneenddateindex);
-                        milestonedata.add(new MilestoneModel(milestonenumber, milestonedays, milestonetext, milestonestartdate, milestoneenddate));
+                        int milestoneIscompleted = cur1.getInt(milestoneIscompletedindex);
+                        milestonedata.add(new MilestoneModel(milestonenumber, milestonedays, milestonetext, milestonestartdate, milestoneenddate,milestoneIscompleted));
                     }
                 }
                 Intent i = new Intent(FinalDetails.this, ClickAndPickEdit.class);
@@ -153,7 +155,8 @@ public class FinalDetails extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return GoalFragment.addfrag(goalnames.get(position), id.get(position));
+            return MilestonesFragment.addfrag(goalnames.get(position), id.get(position));
+           // return GoalFragment.addfrag(goalnames.get(position), id.get(position));
         }
 
         @Override
