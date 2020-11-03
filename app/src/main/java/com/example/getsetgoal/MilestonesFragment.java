@@ -1,9 +1,7 @@
 package com.example.getsetgoal;
 
-import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -65,14 +63,12 @@ public class MilestonesFragment extends Fragment {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());
             msdata.setLayoutManager(linearLayoutManager);
 
-            motionpathadapter = new Motionpathadapter(getActivity(),milestonedata, new Motionpathadapter.Milestone() {
+            motionpathadapter = new Motionpathadapter(getActivity(),milestonedata, new Motionpathadapter.MilestoneInterface() {
                 @Override
-                public void mymilestone(final MilestoneModel milestoneModel) {
-                    Toast.makeText(getContext(),id+"--"+milestoneModel.getMilestoneNumber(),Toast.LENGTH_SHORT).show();
+                public void onmilestoneUpdate(final MilestoneModel milestoneModel) {
                     ContentValues cv = new ContentValues();
                     cv.put("Milestone_Iscomplete",1); //These Fields should be your String values of actual column names
                     database.update("MilestoneDetails", cv, "Milestone_Number="+milestoneModel.getMilestoneNumber()+" AND "+"Goal_id="+id, null);
-
                 }
             });
             msdata.setAdapter(motionpathadapter);
@@ -85,8 +81,6 @@ public class MilestonesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-
-
     public static MilestonesFragment addfrag(String val, int val2) {
         MilestonesFragment fragment = new MilestonesFragment();
         Bundle args = new Bundle();
@@ -95,6 +89,4 @@ public class MilestonesFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
-
 }

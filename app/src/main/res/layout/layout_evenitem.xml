@@ -2,6 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="250dp"
+    android:layout_marginStart="46dp"
+    android:layout_marginEnd="46dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.airbnb.lottie.LottieAnimationView
@@ -13,8 +15,6 @@
         android:scaleType="centerCrop"
         app:lottie_fileName="dashed_even.json"
         app:lottie_imageAssetsFolder = "images/"
-        android:layout_marginEnd="12dp"
-        android:layout_marginStart="10dp"
         />
 
     <LinearLayout
@@ -23,9 +23,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginStart="8dp"
         android:layout_alignParentRight="true"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp">
+        android:layout_marginLeft="8dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -65,5 +63,14 @@
             android:layout_marginLeft="36dp" />
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_start"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/ic_start"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        />
 
 </RelativeLayout>

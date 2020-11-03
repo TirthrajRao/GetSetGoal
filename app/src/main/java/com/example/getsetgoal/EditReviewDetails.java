@@ -50,7 +50,6 @@ public class EditReviewDetails extends AppCompatActivity {
 
         goaltitle.setText(title);
 
-
         milestonedata = (ArrayList<MilestoneModel>) getIntent().getSerializableExtra("milestonedata");
         startdate.setText(sdate);
         enddate.setText(edate);
