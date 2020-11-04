@@ -10,12 +10,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.airbnb.lottie.LottieAnimationView;
-
 import java.util.List;
 
 public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -25,20 +22,22 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     Activity context;
 
     boolean isRunning=false;
+    boolean ismilestonecompleted;
 
-    public Motionpathadapter(Activity context, List<MilestoneModel> milestoneModels, MilestoneInterface msinterface) {
+    public Motionpathadapter(Activity context, List<MilestoneModel> milestoneModels, MilestoneInterface msinterface,boolean ismilestonecompleted){
         this.milestoneModels = milestoneModels;
         this.msinterface = msinterface;
         this.context = context;
+        this.ismilestonecompleted = ismilestonecompleted;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == 0) {
+        if (viewType == 0){
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_evenitem, parent, false);
             return new ViewHolderEven(view);
-        } else {
+        }else{
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_odditem, parent, false);
             return new ViewHolderOdd(view);
         }
@@ -48,21 +47,18 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         final MilestoneModel milestone = milestoneModels.get(position);
-
-        if (holder.getItemViewType() == 0) {
+        if (holder.getItemViewType() == 0){
             final ViewHolderEven even = (ViewHolderEven) holder;
             even.setData(milestone,position);
-
-        } else {
+        }else {
             ViewHolderOdd odd = (ViewHolderOdd) holder;
             odd.setData(milestone,position);
-
         }
     }
 
     class ViewHolderOdd extends RecyclerView.ViewHolder {
 
-        ImageView iv_milestoneodd,iv_start;
+        ImageView iv_milestoneodd,iv_start,ivmsoddcoins;
         TextView tvmstitleodd,tvmsmessageodd;
         LottieAnimationView iv_lotiodd;
 
@@ -73,12 +69,16 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             tvmstitleodd=itemView.findViewById(R.id.tvmstitleodd);
             tvmsmessageodd=itemView.findViewById(R.id.tvmsmessageodd);
             iv_lotiodd=itemView.findViewById(R.id.iv_lotiodd);
+            ivmsoddcoins=itemView.findViewById(R.id.ivmsoddcoins);
         }
 
         public void setData(final MilestoneModel milestone,int pos) {
-           tvmstitleodd.setText("MS"+milestone.getMilestoneNumber()+"");
-           tvmsmessageodd.setText(milestone.getMilestoneText());
-           iv_milestoneodd.setOnClickListener(new View.OnClickListener() {
+            if(ismilestonecompleted && pos==0){
+                ivmsoddcoins.setVisibility(View.VISIBLE);
+            }
+            tvmstitleodd.setText("MS"+milestone.getMilestoneNumber()+"");
+            tvmsmessageodd.setText(milestone.getMilestoneText());
+            iv_milestoneodd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if(!isRunning) {
@@ -114,7 +114,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             final View customLayout
                     = context.getLayoutInflater().inflate(R.layout.layout_update_milestone,null);
             alertDialog.setView(customLayout);
-           final AlertDialog dialog=alertDialog.create();
+            final AlertDialog dialog=alertDialog.create();
 
             Button btn_complete=customLayout.findViewById(R.id.btn_complete);
             Button btn_notcomplete=customLayout.findViewById(R.id.btn_notcomplete);
@@ -166,7 +166,6 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 msinterface.onmilestoneUpdate(milestoneModel);
                 isRunning=false;
             }
-
             @Override
             public void onAnimationCancel(Animator animator) {
                 isRunning=false;
@@ -182,7 +181,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     class ViewHolderEven extends RecyclerView.ViewHolder {
 
-        ImageView iv_milestoneeven,iv_start;
+        ImageView iv_milestoneeven,iv_start,ivmscoins;
         TextView tvmstitle, tvmsmessage;
         LottieAnimationView iv_milestone;
 
@@ -193,11 +192,15 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             tvmstitle = itemView.findViewById(R.id.tvmstitle);
             tvmsmessage = itemView.findViewById(R.id.tvmsmessage);
             iv_milestone = itemView.findViewById(R.id.iv_milestone);
+            ivmscoins = itemView.findViewById(R.id.ivmscoins);
         }
 
         public void setData(final MilestoneModel milestone,int pos) {
-           tvmstitle.setText("MS" + milestone.getMilestoneNumber() + "");
-           tvmsmessage.setText(milestone.getMilestoneText());
+            if(ismilestonecompleted && pos==0){
+                ivmscoins.setVisibility(View.VISIBLE);
+            }
+            tvmstitle.setText("MS" + milestone.getMilestoneNumber() + "");
+            tvmsmessage.setText(milestone.getMilestoneText());
             iv_milestoneeven.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -219,9 +222,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 iv_milestone.setAnimation("dashodd.json");
                 iv_milestone.playAnimation();
             }
-
             iv_start.setVisibility(milestone.getMilestoneNumber()==1 ? View.VISIBLE : View.GONE);
-
         }
 
     }

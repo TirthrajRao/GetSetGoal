@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,11 +15,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class MilestonesFragment extends Fragment {
+
+    AlertDialog.Builder db;
+    AlertDialog alertDialog;
 
     String name;
     int id;
@@ -29,6 +32,8 @@ public class MilestonesFragment extends Fragment {
 
     View view;
     Motionpathadapter motionpathadapter;
+
+    int completedms=0;
 
 
     @Override
@@ -55,25 +60,23 @@ public class MilestonesFragment extends Fragment {
                 String milestonestartdate = cur1.getString(milestonestartdateindex);
                 String milestoneenddate = cur1.getString(milestoneenddateindex);
                 int milestoneIscompleted = cur1.getInt(milestoneIscompletedIndex);
+                completedms=completedms+milestoneIscompleted;
                 milestonedata.add(new MilestoneModel(milestonenumber, milestonedays, milestonetext, milestonestartdate, milestoneenddate,milestoneIscompleted));
             }
             Collections.reverse(milestonedata);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());
             msdata.setLayoutManager(linearLayoutManager);
 
-            motionpathadapter = new Motionpathadapter(getActivity(),milestonedata, new Motionpathadapter.MilestoneInterface() {
+            motionpathadapter = new Motionpathadapter(getActivity(),milestonedata, new Motionpathadapter.MilestoneInterface(){
                 @Override
-                public void onmilestoneUpdate(final MilestoneModel milestoneModel) {
+                public void onmilestoneUpdate(final MilestoneModel milestoneModel){
                     ContentValues cv = new ContentValues();
                     cv.put("Milestone_Iscomplete",1); //These Fields should be your String values of actual column names
                     database.update("MilestoneDetails", cv, "Milestone_Number="+milestoneModel.getMilestoneNumber()+" AND "+"Goal_id="+id, null);
                 }
-            });
+            },(milestonedata.size()==completedms) ? true : false);
             msdata.setAdapter(motionpathadapter);
         }
-
-        Toast.makeText(getContext(), "hello", Toast.LENGTH_LONG).show();
-
         return view;
     }
 
