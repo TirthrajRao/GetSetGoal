@@ -22,7 +22,7 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         app:lottie_autoPlay="true"
-        app:lottie_fileName="dashed_odd.json"
+        app:lottie_fileName="dashodd.json"
         app:lottie_imageAssetsFolder="images/"
         app:lottie_loop="false" />
 

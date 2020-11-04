@@ -47,11 +47,6 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-//        holder.mnumber.setText("MS"+milestonedata.get(position).getMilestoneNumber()+"");
-//        holder.mdetails.setText(milestonedata.get(position).getMilestoneText());
-//        holder.mdays.setText(milestonedata.get(position).getMilstonedays()+"");
-//        holder.mstartdate.setText(milestonedata.get(position).getMilestoneStartdate());
-//        holder.menddate.setText(milestonedata.get(position).getMilestoneEnddate());
         final MilestoneModel milestone = milestoneModels.get(position);
 
         if (holder.getItemViewType() == 0) {
@@ -87,18 +82,21 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 @Override
                 public void onClick(View view) {
                     if(!isRunning) {
-                        openUpdateDialog(milestone,getAdapterPosition(),iv_lotiodd, "anim_odd.json");
+                       // openUpdateDialog(milestone,getAdapterPosition(),iv_lotiodd, "anim_odd.json");
+                        openUpdateDialog(milestone,getAdapterPosition(),iv_lotiodd, "animodd.json");
                     }
                 }
             });
 
             if (milestone.getMilestone_iscomplete() == 1) {
                 iv_milestoneodd.setImageResource(R.drawable.ic_enabled);
-                iv_lotiodd.setAnimation("filled_even.json");
+             //   iv_lotiodd.setAnimation("filled_even.json");
+                iv_lotiodd.setAnimation("filleven.json");
                 iv_lotiodd.playAnimation();
             } else {
                 iv_milestoneodd.setImageResource(R.drawable.ic_disabled);
-                iv_lotiodd.setAnimation("dashed_even.json");
+              //  iv_lotiodd.setAnimation("dashed_even.json");
+                iv_lotiodd.setAnimation("dasheven.json");
                 iv_lotiodd.playAnimation();
             }
 
@@ -204,18 +202,21 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 @Override
                 public void onClick(View view) {
                     if(!isRunning) {
-                        openUpdateDialog(milestone,getAdapterPosition(),iv_milestone, "anim_even.json");
+                       // openUpdateDialog(milestone,getAdapterPosition(),iv_milestone, "anim_even.json");
+                        openUpdateDialog(milestone,getAdapterPosition(),iv_milestone, "animeven.json");
                     }
                 }
             });
 
             if (milestone.getMilestone_iscomplete() == 1) {
                 iv_milestoneeven.setImageResource(R.drawable.ic_enabled);
-                iv_milestone.setAnimation("filled_odd.json");
+               // iv_milestone.setAnimation("filled_odd.json");
+                iv_milestone.setAnimation("fillodd.json");
                 iv_milestone.playAnimation();
             } else {
                 iv_milestoneeven.setImageResource(R.drawable.ic_disabled);
-                iv_milestone.setAnimation("dashed_odd.json");
+               // iv_milestone.setAnimation("dashed_odd.json");
+                iv_milestone.setAnimation("dashodd.json");
                 iv_milestone.playAnimation();
             }
 
