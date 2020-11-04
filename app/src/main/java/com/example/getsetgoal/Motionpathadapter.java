@@ -83,7 +83,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 public void onClick(View view) {
                     if(!isRunning) {
                        // openUpdateDialog(milestone,getAdapterPosition(),iv_lotiodd, "anim_odd.json");
-                        openUpdateDialog(milestone,getAdapterPosition(),iv_lotiodd, "animodd.json");
+                        openUpdateDialog(milestone,getAdapterPosition(),iv_lotiodd, "animodd.json",ivmsoddcoins);
                     }
                 }
             });
@@ -104,7 +104,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    public void openUpdateDialog(final MilestoneModel milestoneModel,final int pos, final LottieAnimationView iv_milestone, final String animName) {
+    public void openUpdateDialog(final MilestoneModel milestoneModel, final int pos, final LottieAnimationView iv_milestone, final String animName, final ImageView coinimage) {
 
         if (milestoneModel.getMilestone_iscomplete() ==0) {
             final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context)
@@ -124,7 +124,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 @Override
                 public void onClick(View view) {
                     dialog.dismiss();
-                   playAnimation(milestoneModel,iv_milestone,pos,animName);
+                   playAnimation(milestoneModel,iv_milestone,pos,animName,coinimage);
                 }
             });
 
@@ -139,10 +139,9 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 @Override
                 public void onClick(View view) {
                     dialog.dismiss();
-                    playAnimation(milestoneModel,iv_milestone,pos,animName);
+                    playAnimation(milestoneModel,iv_milestone,pos,animName,coinimage);
                 }
             });
-
             dialog.show();
         } else {
             Toast.makeText(context, "Milestone is already completed", Toast.LENGTH_SHORT).show();
@@ -150,7 +149,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     }
 
-    private void playAnimation(final MilestoneModel milestoneModel,final LottieAnimationView iv_milestone,final int pos, final String animName) {
+    private void playAnimation(final MilestoneModel milestoneModel, final LottieAnimationView iv_milestone, final int pos, final String animName, final ImageView coinimage) {
         iv_milestone.setAnimation(animName);
         iv_milestone.playAnimation();
         iv_milestone.addAnimatorListener(new Animator.AnimatorListener() {
@@ -160,7 +159,12 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
 
             @Override
-            public void onAnimationEnd(Animator animator) {
+            public void onAnimationEnd(Animator animator){
+                if (pos==0){
+                    ismilestonecompleted=true;
+                    coinimage.setVisibility(View.VISIBLE);
+                    notifyItemChanged(pos);
+                }
                 milestoneModel.setMilestone_iscomplete(1);
                 notifyItemChanged(pos);
                 msinterface.onmilestoneUpdate(milestoneModel);
@@ -205,8 +209,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 @Override
                 public void onClick(View view) {
                     if(!isRunning) {
-                       // openUpdateDialog(milestone,getAdapterPosition(),iv_milestone, "anim_even.json");
-                        openUpdateDialog(milestone,getAdapterPosition(),iv_milestone, "animeven.json");
+                        openUpdateDialog(milestone,getAdapterPosition(),iv_milestone, "animeven.json",iv_milestoneeven);
                     }
                 }
             });
