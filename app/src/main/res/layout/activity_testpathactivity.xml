@@ -19,7 +19,7 @@
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:layout_centerInParent="true"
-                    android:layout_width="100dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
                     app:lottie_autoPlay="true"
@@ -43,7 +43,7 @@
                 <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/iv_lotiodd"
                     android:layout_centerInParent="true"
-                    android:layout_width="100dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
                     app:lottie_autoPlay="true"
@@ -67,7 +67,7 @@
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:layout_centerInParent="true"
-                    android:layout_width="100dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
                     app:lottie_autoPlay="true"
