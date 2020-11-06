@@ -33,7 +33,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
         if (viewType == 0){
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_evenitem, parent, false);
             return new ViewHolderEven(view);
@@ -72,18 +72,26 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ivmsoddcoins=itemView.findViewById(R.id.ivmsoddcoins);
         }
 
-        public void setData(final MilestoneModel milestone,int pos) {
-            if(ismilestonecompleted && pos==0){
+        public void setData(final MilestoneModel milestone, final int pos) {
+            if(pos==0){
                 ivmsoddcoins.setVisibility(View.VISIBLE);
             }
             tvmstitleodd.setText("MS"+milestone.getMilestoneNumber()+"");
             tvmsmessageodd.setText(milestone.getMilestoneText());
             iv_milestoneodd.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-                    if(!isRunning) {
-                       // openUpdateDialog(milestone,getAdapterPosition(),iv_lotiodd, "anim_odd.json");
-                        openUpdateDialog(milestone,getAdapterPosition(),iv_lotiodd, "animodd.json",ivmsoddcoins);
+                public void onClick(View view){
+                    if(!isRunning){
+                        if(pos==milestoneModels.size()-1){
+                            openUpdateDialog(milestone,getAdapterPosition(),iv_lotiodd, "animodd.json",ivmsoddcoins);
+                        }
+                        else{
+                            if ((milestoneModels.get(pos+1).getMilestone_iscomplete()>0) ? true : false){
+                                openUpdateDialog(milestone,getAdapterPosition(),iv_lotiodd, "animodd.json",ivmsoddcoins);
+                            }else{
+                                Toast.makeText(context, "please complete previous milestones", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     }
                 }
             });
@@ -110,9 +118,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context)
                     .setIcon(R.drawable.ic_enabled)
                     .setTitle("Milestone " + milestoneModel.getMilestoneText());
-
-            final View customLayout
-                    = context.getLayoutInflater().inflate(R.layout.layout_update_milestone,null);
+            final View customLayout = context.getLayoutInflater().inflate(R.layout.layout_update_milestone,null);
             alertDialog.setView(customLayout);
             final AlertDialog dialog=alertDialog.create();
 
@@ -122,9 +128,9 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             btn_complete.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(View view){
                     dialog.dismiss();
-                   playAnimation(milestoneModel,iv_milestone,pos,animName,coinimage);
+                    playAnimation(milestoneModel,iv_milestone,pos,animName,coinimage);
                 }
             });
 
@@ -157,14 +163,13 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             public void onAnimationStart(Animator animator) {
                 isRunning=true;
             }
-
             @Override
             public void onAnimationEnd(Animator animator){
-                if (pos==0){
-                    ismilestonecompleted=true;
-                    coinimage.setVisibility(View.VISIBLE);
-                    notifyItemChanged(pos);
-                }
+//                if (pos==0){
+//                    ismilestonecompleted=true;
+//                    coinimage.setVisibility(View.VISIBLE);
+//                    notifyItemChanged(pos);
+//                }
                 milestoneModel.setMilestone_iscomplete(1);
                 notifyItemChanged(pos);
                 msinterface.onmilestoneUpdate(milestoneModel);
@@ -199,8 +204,8 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ivmscoins = itemView.findViewById(R.id.ivmscoins);
         }
 
-        public void setData(final MilestoneModel milestone,int pos) {
-            if(ismilestonecompleted && pos==0){
+        public void setData(final MilestoneModel milestone, final int pos){
+            if(pos==0){
                 ivmscoins.setVisibility(View.VISIBLE);
             }
             tvmstitle.setText("MS" + milestone.getMilestoneNumber() + "");
@@ -209,7 +214,16 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 @Override
                 public void onClick(View view) {
                     if(!isRunning) {
-                        openUpdateDialog(milestone,getAdapterPosition(),iv_milestone, "animeven.json",iv_milestoneeven);
+                        if(pos==milestoneModels.size()-1){
+                            openUpdateDialog(milestone,getAdapterPosition(),iv_milestone, "animeven.json",iv_milestoneeven);
+                        }
+                        else{
+                            if((milestoneModels.get(pos+1).getMilestone_iscomplete()>0) ? true : false){
+                                openUpdateDialog(milestone,getAdapterPosition(),iv_milestone, "animeven.json",iv_milestoneeven);
+                            }else{
+                                Toast.makeText(context, "please complete previous milestones", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     }
                 }
             });
@@ -227,7 +241,6 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
             iv_start.setVisibility(milestone.getMilestoneNumber()==1 ? View.VISIBLE : View.GONE);
         }
-
     }
 
     @Override
