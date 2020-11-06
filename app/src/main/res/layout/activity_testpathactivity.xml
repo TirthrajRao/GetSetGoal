@@ -6,13 +6,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".testpathactivity">
 
-
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <RelativeLayout
+                android:background="#C6C5CD"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="110dp"
                 android:layout_height="200dp">
@@ -23,7 +23,7 @@
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
                     app:lottie_autoPlay="true"
-                    app:lottie_fileName="trydashthree.json"
+                    app:lottie_fileName="try13.json"
                     app:lottie_imageAssetsFolder="images/"
                     app:lottie_loop="false" />
 
@@ -36,6 +36,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:background="#F8C1C1"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="110dp"
                 android:layout_height="200dp">
@@ -47,7 +48,7 @@
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
                     app:lottie_autoPlay="true"
-                    app:lottie_fileName="trydashtwo.json"
+                    app:lottie_fileName="try12.json"
                     app:lottie_imageAssetsFolder="images/"
                     app:lottie_loop="false" />
 
@@ -61,6 +62,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:background="#C6C5CD"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="110dp"
                 android:layout_height="200dp">
@@ -71,7 +73,7 @@
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
                     app:lottie_autoPlay="true"
-                    app:lottie_fileName="trydashone.json"
+                    app:lottie_fileName="try11.json"
                     app:lottie_imageAssetsFolder="images/"
                     app:lottie_loop="false" />
 
