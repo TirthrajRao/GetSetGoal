@@ -15,7 +15,7 @@
             <RelativeLayout
                 android:layout_gravity="center_horizontal"
                 android:layout_width="110dp"
-                android:layout_height="240dp">
+                android:layout_height="200dp">
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:layout_centerInParent="true"
@@ -29,15 +29,16 @@
 
                 <ImageView
                     android:src="@drawable/ic_enabled"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"/>
+                    android:visibility="gone"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"/>
 
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_gravity="center_horizontal"
                 android:layout_width="110dp"
-                android:layout_height="240dp">
+                android:layout_height="200dp">
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/iv_lotiodd"
@@ -52,16 +53,17 @@
 
                 <ImageView
                     android:layout_alignParentRight="true"
+                    android:visibility="gone"
                     android:src="@drawable/ic_enabled"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"/>
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"/>
 
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_gravity="center_horizontal"
                 android:layout_width="110dp"
-                android:layout_height="240dp">
+                android:layout_height="200dp">
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:layout_centerInParent="true"
@@ -75,8 +77,9 @@
 
                 <ImageView
                     android:src="@drawable/ic_enabled"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"/>
+                    android:visibility="gone"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"/>
 
             </RelativeLayout>
 
