@@ -23,7 +23,7 @@
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
                     app:lottie_autoPlay="true"
-                    app:lottie_fileName="try13.json"
+                    app:lottie_fileName="d3.json"
                     app:lottie_imageAssetsFolder="images/"
                     app:lottie_loop="false" />
 
@@ -48,7 +48,7 @@
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
                     app:lottie_autoPlay="true"
-                    app:lottie_fileName="try12.json"
+                    app:lottie_fileName="d2.json"
                     app:lottie_imageAssetsFolder="images/"
                     app:lottie_loop="false" />
 
@@ -68,14 +68,13 @@
                 android:layout_height="200dp">
 
 
-
                 <com.airbnb.lottie.LottieAnimationView
                     android:layout_centerInParent="true"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
                     app:lottie_autoPlay="true"
-                    app:lottie_fileName="try11.json"
+                    app:lottie_fileName="d1.json"
                     app:lottie_imageAssetsFolder="images/"
                     app:lottie_loop="false" />
 
