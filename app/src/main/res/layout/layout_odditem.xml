@@ -1,97 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_marginStart="40dp"
-    android:layout_marginEnd="40dp">
+    android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/ivmsoddcoins"
-        android:src="@drawable/evencoin"
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/coin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="dashed_odd_coin.json"
+        app:lottie_imageAssetsFolder="images/"
         android:visibility="gone"
-        android:layout_width="120dp"
-        android:layout_gravity="end"
-        android:layout_marginRight="20dp"
-        android:layout_height="120dp"/>
+        app:lottie_loop="false" />
 
-    <!--<ImageView-->
-    <!--    android:id="@+id/iv_milestone"-->
-    <!--    android:layout_width="match_parent"-->
-    <!--    android:layout_height="match_parent"-->
-    <!--    android:background="@drawable/ic_left_unfilled"-->
-    <!--    android:layout_marginStart="8dp"-->
-    <!--    android:layout_marginEnd="8dp"-->
-    <!--    android:layout_marginTop="8dp"-->
-    <!--    />-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@+id/coin">
 
-   <RelativeLayout
-       android:layout_width="match_parent"
-       android:layout_height="240dp">
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lotti"
+            android:layout_width="110dp"
+            android:layout_height="200dp"
+            android:layout_centerHorizontal="true"
+            android:scaleType="centerCrop"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="dashed_odd.json"
+            app:lottie_imageAssetsFolder="images/"
+            app:lottie_loop="false" />
 
-       <com.airbnb.lottie.LottieAnimationView
-           android:id="@+id/iv_lotiodd"
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:scaleType="centerCrop"
-           app:lottie_autoPlay="true"
-           app:lottie_fileName="dashodd.json"
-           app:lottie_imageAssetsFolder="images/"
-           app:lottie_loop="false" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-       <LinearLayout
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="-40dp"
+                android:layout_toLeftOf="@+id/rl_disable"
+                android:text="date" />
 
+            <RelativeLayout
+                android:id="@+id/rl_disable"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:gravity="end">
 
-           <ImageView
-               android:id="@+id/iv_milestoneodd"
-               android:layout_width="40dp"
-               android:layout_height="40dp"
-               android:layout_marginRight="36dp"
-               android:src="@drawable/ic_disabled" />
+                <ImageView
+                    android:id="@+id/iv_disable"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_disabled" />
 
-           <LinearLayout
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_weight="1"
-               android:gravity="end"
-               android:orientation="vertical">
+            </RelativeLayout>
 
-               <TextView
-                   android:id="@+id/tvmstitleodd"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:gravity="center"
-                   android:text="MS 1"
-                   android:textColor="@color/colorPrimary"
-                   android:textSize="16dp"
-                   android:textStyle="bold" />
+            <TextView
+                android:id="@+id/tv_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/rl_disable"
+                android:text="date" />
 
-               <TextView
-                   android:id="@+id/tvmsmessageodd"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:gravity="center"
-                   android:text="ms1 details message"
-                   android:textColor="@color/colorBlack" />
+        </RelativeLayout>
 
-           </LinearLayout>
+    </RelativeLayout>
 
-       </LinearLayout>
-
-       <ImageView
-           android:id="@+id/iv_start"
-           android:layout_width="30dp"
-           android:layout_height="30dp"
-           android:background="@drawable/ic_start"
-           android:layout_alignParentBottom="true"
-           android:layout_alignParentEnd="true"
-           android:visibility="gone"
-           />
-
-   </RelativeLayout>
-
-
-</LinearLayout>
+</RelativeLayout>

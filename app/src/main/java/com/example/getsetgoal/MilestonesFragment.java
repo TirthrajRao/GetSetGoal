@@ -59,8 +59,10 @@ public class MilestonesFragment extends Fragment {
                 completedms=completedms+milestoneIscompleted;
                 milestonedata.add(new MilestoneModel(milestonenumber, milestonedays, milestonetext, milestonestartdate, milestoneenddate,milestoneIscompleted));
             }
-            Collections.reverse(milestonedata);
+
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());
+            linearLayoutManager.setStackFromEnd(true);
+            linearLayoutManager.setReverseLayout(true);
             msdata.setLayoutManager(linearLayoutManager);
 
             motionpathadapter = new Motionpathadapter(getActivity(),milestonedata, new Motionpathadapter.MilestoneInterface(){
@@ -72,6 +74,13 @@ public class MilestonesFragment extends Fragment {
                 }
             },(milestonedata.size()==completedms) ? true : false);
             msdata.setAdapter(motionpathadapter);
+            msdata.post(new Runnable() {
+                @Override
+                public void run() {
+                    msdata.smoothScrollToPosition(0);
+                }
+            });
+
         }
         return view;
     }

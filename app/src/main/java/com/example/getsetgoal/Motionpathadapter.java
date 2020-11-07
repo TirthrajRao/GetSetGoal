@@ -10,9 +10,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.airbnb.lottie.LottieAnimationView;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -20,11 +26,10 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     List<MilestoneModel> milestoneModels;
     MilestoneInterface msinterface;
     Activity context;
-
-    boolean isRunning=false;
+    boolean isRunning = false;
     boolean ismilestonecompleted;
 
-    public Motionpathadapter(Activity context, List<MilestoneModel> milestoneModels, MilestoneInterface msinterface,boolean ismilestonecompleted){
+    public Motionpathadapter(Activity context, List<MilestoneModel> milestoneModels, MilestoneInterface msinterface, boolean ismilestonecompleted) {
         this.milestoneModels = milestoneModels;
         this.msinterface = msinterface;
         this.context = context;
@@ -33,13 +38,16 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
-        if (viewType == 0){
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == 0) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_evenitem, parent, false);
             return new ViewHolderEven(view);
-        }else{
+        } else if (viewType == 1) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_odditem, parent, false);
             return new ViewHolderOdd(view);
+        } else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_firstitem, parent, false);
+            return new ViewHolderFirst(view);
         }
     }
 
@@ -47,90 +55,180 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         final MilestoneModel milestone = milestoneModels.get(position);
-        if (holder.getItemViewType() == 0){
+        if (holder.getItemViewType() == 0) {
             final ViewHolderEven even = (ViewHolderEven) holder;
-            even.setData(milestone,position);
-        }else {
+            even.setData(milestone, position);
+        } else if (holder.getItemViewType() == 1) {
             ViewHolderOdd odd = (ViewHolderOdd) holder;
-            odd.setData(milestone,position);
+            odd.setData(milestone, position);
+        } else {
+            ViewHolderFirst first = (ViewHolderFirst) holder;
+            first.setData(milestone, position);
         }
     }
 
     class ViewHolderOdd extends RecyclerView.ViewHolder {
 
-        ImageView iv_milestoneodd,iv_start,ivmsoddcoins;
-        TextView tvmstitleodd,tvmsmessageodd;
-        LottieAnimationView iv_lotiodd;
+        LottieAnimationView lotti, coin;
+        TextView tv_date, tv_text;
+        ImageView iv_disable;
 
         public ViewHolderOdd(@NonNull View itemView) {
             super(itemView);
-            iv_milestoneodd=itemView.findViewById(R.id.iv_milestoneodd);
-            iv_start=itemView.findViewById(R.id.iv_start);
-            tvmstitleodd=itemView.findViewById(R.id.tvmstitleodd);
-            tvmsmessageodd=itemView.findViewById(R.id.tvmsmessageodd);
-            iv_lotiodd=itemView.findViewById(R.id.iv_lotiodd);
-            ivmsoddcoins=itemView.findViewById(R.id.ivmsoddcoins);
+            lotti = itemView.findViewById(R.id.lotti);
+            coin = itemView.findViewById(R.id.coin);
+            tv_date = itemView.findViewById(R.id.tv_date);
+            tv_text = itemView.findViewById(R.id.tv_text);
+            iv_disable = itemView.findViewById(R.id.iv_disable);
         }
 
         public void setData(final MilestoneModel milestone, final int pos) {
-            if(pos==0){
-                ivmsoddcoins.setVisibility(View.VISIBLE);
+
+            if (pos == milestoneModels.size() - 1) {
+                coin.setVisibility(View.VISIBLE);
+                if (milestone.getMilestone_iscomplete()==1 || milestone.isPlayed()) {
+                    coin.setAnimation("filled_odd_coin.json");
+                    coin.playAnimation();
+                } else {
+                    coin.setAnimation("dashed_odd_coin.json");
+                    coin.playAnimation();
+                }
+            } else {
+                coin.setVisibility(View.GONE);
             }
-            tvmstitleodd.setText("MS"+milestone.getMilestoneNumber()+"");
-            tvmsmessageodd.setText(milestone.getMilestoneText());
-            iv_milestoneodd.setOnClickListener(new View.OnClickListener() {
+
+            tv_text.setText("MS" + milestone.getMilestoneNumber() + ":" + milestone.getMilestoneText());
+            tv_date.setText(milestone.getMilestoneStartdate());
+
+            iv_disable.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view){
-                    if(!isRunning){
-                        if(pos==milestoneModels.size()-1){
-                            openUpdateDialog(milestone,getAdapterPosition(),iv_lotiodd, "animodd.json",ivmsoddcoins);
-                        }
-                        else{
-                            if ((milestoneModels.get(pos+1).getMilestone_iscomplete()>0) ? true : false){
-                                openUpdateDialog(milestone,getAdapterPosition(),iv_lotiodd, "animodd.json",ivmsoddcoins);
-                            }else{
-                                Toast.makeText(context, "please complete previous milestones", Toast.LENGTH_SHORT).show();
+                public void onClick(View view) {
+                    if (!isRunning) {
+                        if (isPreviousMilestoneComleted(pos)) {
+
+                            if(milestone.getMilestone_iscomplete()==0)
+                            {
+                                if (milestone.isPlayed()) {
+                                    openUpdateDialog(milestone, getAdapterPosition(),iv_disable);
+                                } else {
+                                    playAnimation(milestone, lotti, pos, "anim_odd.json",coin,"anim_odd_coin.json");
+                                }
                             }
+                            else {
+                                Toast.makeText(context, "milestone already completed", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Toast.makeText(context, "please complete previous milestone", Toast.LENGTH_LONG).show();
                         }
                     }
                 }
             });
 
+
             if (milestone.getMilestone_iscomplete() == 1) {
-                iv_milestoneodd.setImageResource(R.drawable.ic_enabled);
-             //   iv_lotiodd.setAnimation("filled_even.json");
-                iv_lotiodd.setAnimation("filleven.json");
-                iv_lotiodd.playAnimation();
+                iv_disable.setImageResource(R.drawable.ic_enabled);
             } else {
-                iv_milestoneodd.setImageResource(R.drawable.ic_disabled);
-              //  iv_lotiodd.setAnimation("dashed_even.json");
-                iv_lotiodd.setAnimation("dasheven.json");
-                iv_lotiodd.playAnimation();
+                iv_disable.setImageResource(R.drawable.ic_disabled);
             }
 
-            iv_start.setVisibility(milestone.getMilestoneNumber()==1 ? View.VISIBLE : View.GONE);
+            if (milestone.getMilestone_iscomplete()==1 || milestone.isPlayed()) {
+                lotti.setAnimation("filled_odd.json");
+                lotti.playAnimation();
+            } else {
+                lotti.setAnimation("dashed_odd.json");
+                lotti.playAnimation();
+            }
+
+
         }
     }
 
-    public void openUpdateDialog(final MilestoneModel milestoneModel, final int pos, final LottieAnimationView iv_milestone, final String animName, final ImageView coinimage) {
+    class ViewHolderFirst extends RecyclerView.ViewHolder {
 
-        if (milestoneModel.getMilestone_iscomplete() ==0) {
+        LottieAnimationView lotti;
+        TextView tv_date, tv_text;
+        ImageView iv_disable;
+
+        public ViewHolderFirst(@NonNull View itemView) {
+            super(itemView);
+            lotti = itemView.findViewById(R.id.lotti);
+            tv_date = itemView.findViewById(R.id.tv_date);
+            tv_text = itemView.findViewById(R.id.tv_text);
+            iv_disable = itemView.findViewById(R.id.iv_disable);
+        }
+
+        public void setData(final MilestoneModel milestone, final int pos) {
+
+            tv_text.setText("MS" + milestone.getMilestoneNumber() + ":" + milestone.getMilestoneText());
+            tv_date.setText(milestone.getMilestoneStartdate());
+
+            iv_disable.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!isRunning) {
+                        if (isPreviousMilestoneComleted(pos)) {
+                            if (isDateAfterORSame(pos)) {
+                                if(milestone.getMilestone_iscomplete()==0) {
+                                    if (milestone.isPlayed()) {
+                                        openUpdateDialog(milestone, getAdapterPosition(),iv_disable);
+                                    } else {
+                                        playAnimation(milestone, lotti, pos, "anim_first.json",null,"");
+                                    }
+                                }
+                                else {
+                                    Toast.makeText(context, "milestone already completed", Toast.LENGTH_LONG).show();
+                                }
+                            } else {
+                                Toast.makeText(context, "Goal not yet started", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Toast.makeText(context, "please complete previous milestone", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+            });
+
+
+            if (milestone.getMilestone_iscomplete() == 1) {
+                iv_disable.setImageResource(R.drawable.ic_enabled);
+            } else {
+                iv_disable.setImageResource(R.drawable.ic_disabled);
+            }
+
+            if (milestone.getMilestone_iscomplete()==1 || milestone.isPlayed()) {
+                lotti.setAnimation("filled_first.json");
+                lotti.playAnimation();
+            } else {
+                lotti.setAnimation("dashed_first.json");
+                lotti.playAnimation();
+            }
+        }
+    }
+
+    public void openUpdateDialog(final MilestoneModel milestoneModel, final int pos,final ImageView iv_disable) {
+
+        if (milestoneModel.getMilestone_iscomplete() == 0) {
             final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context)
                     .setIcon(R.drawable.ic_enabled)
                     .setTitle("Milestone " + milestoneModel.getMilestoneText());
-            final View customLayout = context.getLayoutInflater().inflate(R.layout.layout_update_milestone,null);
-            alertDialog.setView(customLayout);
-            final AlertDialog dialog=alertDialog.create();
 
-            Button btn_complete=customLayout.findViewById(R.id.btn_complete);
-            Button btn_notcomplete=customLayout.findViewById(R.id.btn_notcomplete);
-            Button btn_partial=customLayout.findViewById(R.id.btn_partial);
+            final View customLayout
+                    = context.getLayoutInflater().inflate(R.layout.layout_update_milestone, null);
+            alertDialog.setView(customLayout);
+            final AlertDialog dialog = alertDialog.create();
+
+            Button btn_complete = customLayout.findViewById(R.id.btn_complete);
+            Button btn_notcomplete = customLayout.findViewById(R.id.btn_notcomplete);
+            Button btn_partial = customLayout.findViewById(R.id.btn_partial);
 
             btn_complete.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view){
+                public void onClick(View view) {
                     dialog.dismiss();
-                    playAnimation(milestoneModel,iv_milestone,pos,animName,coinimage);
+                    milestoneModel.setMilestone_iscomplete(1);
+//                    notifyItemChanged(pos);
+                    iv_disable.setImageResource(R.drawable.ic_enabled);
+                    msinterface.onmilestoneUpdate(milestoneModel);
                 }
             });
 
@@ -145,7 +243,9 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 @Override
                 public void onClick(View view) {
                     dialog.dismiss();
-                    playAnimation(milestoneModel,iv_milestone,pos,animName,coinimage);
+                    milestoneModel.setMilestone_iscomplete(1);
+                    notifyItemChanged(pos);
+                    msinterface.onmilestoneUpdate(milestoneModel);
                 }
             });
             dialog.show();
@@ -155,29 +255,34 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     }
 
-    private void playAnimation(final MilestoneModel milestoneModel, final LottieAnimationView iv_milestone, final int pos, final String animName, final ImageView coinimage) {
+    private void playAnimation(final MilestoneModel milestoneModel, final LottieAnimationView iv_milestone, final int pos, final String animName, final LottieAnimationView coin,final String coinFile) {
         iv_milestone.setAnimation(animName);
         iv_milestone.playAnimation();
         iv_milestone.addAnimatorListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
-                isRunning=true;
+                isRunning = true;
             }
+
             @Override
-            public void onAnimationEnd(Animator animator){
-//                if (pos==0){
-//                    ismilestonecompleted=true;
-//                    coinimage.setVisibility(View.VISIBLE);
-//                    notifyItemChanged(pos);
-//                }
-                milestoneModel.setMilestone_iscomplete(1);
-                notifyItemChanged(pos);
-                msinterface.onmilestoneUpdate(milestoneModel);
-                isRunning=false;
+            public void onAnimationEnd(Animator animator) {
+                milestoneModel.setPlayed(true);
+//                notifyItemChanged(pos);
+                isRunning = false;
+
+                if(coin!=null) {
+                    if(coin.getVisibility()==View.VISIBLE)
+                    {
+                        playCoinAnimation(coin,coinFile);
+                    }
+                }
+
+
             }
+
             @Override
             public void onAnimationCancel(Animator animator) {
-                isRunning=false;
+                isRunning = false;
             }
 
             @Override
@@ -187,65 +292,144 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
 
+   public void playCoinAnimation(final LottieAnimationView coin,final String coinFile)
+   {
+       coin.setAnimation(coinFile);
+       coin.playAnimation();
+       coin.addAnimatorListener(new Animator.AnimatorListener() {
+           @Override
+           public void onAnimationStart(Animator animator) {
+               isRunning = true;
+           }
+
+           @Override
+           public void onAnimationEnd(Animator animator) {
+               isRunning = false;
+           }
+
+           @Override
+           public void onAnimationCancel(Animator animator) {
+               isRunning = false;
+           }
+
+           @Override
+           public void onAnimationRepeat(Animator animator) {
+           }
+       });
+   }
+
+
 
     class ViewHolderEven extends RecyclerView.ViewHolder {
 
-        ImageView iv_milestoneeven,iv_start,ivmscoins;
-        TextView tvmstitle, tvmsmessage;
-        LottieAnimationView iv_milestone;
+        LottieAnimationView lotti, coin;
+        TextView tv_date, tv_text;
+        ImageView iv_disable;
+
 
         public ViewHolderEven(@NonNull View itemView) {
             super(itemView);
-            iv_milestoneeven = itemView.findViewById(R.id.iv_milestoneeven);
-            iv_start = itemView.findViewById(R.id.iv_start);
-            tvmstitle = itemView.findViewById(R.id.tvmstitle);
-            tvmsmessage = itemView.findViewById(R.id.tvmsmessage);
-            iv_milestone = itemView.findViewById(R.id.iv_milestone);
-            ivmscoins = itemView.findViewById(R.id.ivmscoins);
+            lotti = itemView.findViewById(R.id.lotti);
+            coin = itemView.findViewById(R.id.coin);
+            tv_date = itemView.findViewById(R.id.tv_date);
+            tv_text = itemView.findViewById(R.id.tv_text);
+            iv_disable = itemView.findViewById(R.id.iv_disable);
         }
 
-        public void setData(final MilestoneModel milestone, final int pos){
-            if(pos==0){
-                ivmscoins.setVisibility(View.VISIBLE);
+        public void setData(final MilestoneModel milestone, final int pos) {
+
+
+            if (pos == milestoneModels.size() - 1) {
+                coin.setVisibility(View.VISIBLE);
+                if (milestone.getMilestone_iscomplete()==1 || milestone.isPlayed()) {
+                    coin.setAnimation("filled_even_coin.json");
+                    coin.playAnimation();
+                } else {
+                    coin.setAnimation("dashed_even_coin.json");
+                    coin.playAnimation();
+                }
+            } else {
+                coin.setVisibility(View.GONE);
             }
-            tvmstitle.setText("MS" + milestone.getMilestoneNumber() + "");
-            tvmsmessage.setText(milestone.getMilestoneText());
-            iv_milestoneeven.setOnClickListener(new View.OnClickListener() {
+
+            tv_text.setText("MS" + milestone.getMilestoneNumber() + ":" + milestone.getMilestoneText());
+            tv_date.setText(milestone.getMilestoneStartdate());
+
+            iv_disable.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(!isRunning) {
-                        if(pos==milestoneModels.size()-1){
-                            openUpdateDialog(milestone,getAdapterPosition(),iv_milestone, "animeven.json",iv_milestoneeven);
-                        }
-                        else{
-                            if((milestoneModels.get(pos+1).getMilestone_iscomplete()>0) ? true : false){
-                                openUpdateDialog(milestone,getAdapterPosition(),iv_milestone, "animeven.json",iv_milestoneeven);
-                            }else{
-                                Toast.makeText(context, "please complete previous milestones", Toast.LENGTH_SHORT).show();
+                    if (!isRunning) {
+                        if (isPreviousMilestoneComleted(pos)) {
+
+                            if(milestone.getMilestone_iscomplete()==0) {
+                                if (milestone.isPlayed()) {
+                                    openUpdateDialog(milestone, getAdapterPosition(),iv_disable);
+                                } else {
+                                    playAnimation(milestone, lotti, pos, "anim_even.json",coin,"anim_even_coin.json");
+                                }
                             }
+                            else {
+                                Toast.makeText(context, "milestone already completed", Toast.LENGTH_LONG).show();
+                            }
+
+                        } else {
+                            Toast.makeText(context, "please complete previous milestone", Toast.LENGTH_LONG).show();
                         }
                     }
                 }
             });
 
+
             if (milestone.getMilestone_iscomplete() == 1) {
-                iv_milestoneeven.setImageResource(R.drawable.ic_enabled);
-               // iv_milestone.setAnimation("filled_odd.json");
-                iv_milestone.setAnimation("fillodd.json");
-                iv_milestone.playAnimation();
+                iv_disable.setImageResource(R.drawable.ic_enabled);
             } else {
-                iv_milestoneeven.setImageResource(R.drawable.ic_disabled);
-               // iv_milestone.setAnimation("dashed_odd.json");
-                iv_milestone.setAnimation("dashodd.json");
-                iv_milestone.playAnimation();
+                iv_disable.setImageResource(R.drawable.ic_disabled);
             }
-            iv_start.setVisibility(milestone.getMilestoneNumber()==1 ? View.VISIBLE : View.GONE);
+
+            if (milestone.getMilestone_iscomplete()==1 || milestone.isPlayed()) {
+                lotti.setAnimation("filled_even.json");
+                lotti.playAnimation();
+            } else {
+                lotti.setAnimation("dashed_even.json");
+                lotti.playAnimation();
+            }
         }
     }
 
+    public boolean isPreviousMilestoneComleted(int pos) {
+        boolean isAllCompleted = true;
+        for (int i = pos - 1; i >= 0; i--) {
+            if (milestoneModels.get(i).getMilestone_iscomplete() == 0) {
+                isAllCompleted = false;
+                break;
+            }
+        }
+        return isAllCompleted;
+    }
+
+    public boolean isDateAfterORSame(int pos) {
+        boolean isAfter = false;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Date d1 = sdf.parse(milestoneModels.get(pos).getMilestoneStartdate());
+            String data = sdf.format(new Date());
+            Date d2=sdf.parse(data);
+
+            isAfter = d1.compareTo(d2) < 0 || d1.compareTo(d2)==0;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return isAfter;
+    }
+
+
     @Override
     public int getItemViewType(int position) {
-        return position % 2 == 0 ? 0 : 1;
+        if (position == 0) {
+            return 2;
+        } else {
+            return position % 2 == 0 ? 0 : 1;
+        }
     }
 
     @Override

@@ -26,13 +26,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fianltitle"
         app:layout_constraintLeft_toLeftOf="parent"
+        android:gravity="bottom"
         app:layout_constraintRight_toRightOf="parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:overScrollMode="never"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/finalrecycler"
             />
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

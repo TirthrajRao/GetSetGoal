@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical">
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/coin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:lottie_autoPlay="true"
-        app:lottie_fileName="dashed_even_coin.json"
-        app:lottie_imageAssetsFolder="images/"
-        app:lottie_loop="false"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        />
-
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="200dp"
-    android:layout_below="@+id/coin">
-
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lotti"
-        android:layout_width="110dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        app:lottie_autoPlay="true"
-        app:lottie_fileName="dashed_even.json"
-        app:lottie_imageAssetsFolder="images/"
-        android:layout_centerHorizontal="true"
-        app:lottie_loop="false" />
+        android:layout_below="@+id/coin">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lotti"
+            android:layout_width="110dp"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="dashed_first.json"
+            app:lottie_imageAssetsFolder="images/"
+            app:lottie_loop="false"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="2dp"
+            />
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="25dp"
+            android:background="@drawable/ic_getsetgoal"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+
+            />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -73,6 +72,7 @@
 
     </RelativeLayout>
 
-</RelativeLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>

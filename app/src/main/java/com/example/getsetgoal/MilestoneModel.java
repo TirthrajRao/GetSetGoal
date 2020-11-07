@@ -9,6 +9,16 @@ public class MilestoneModel implements Serializable {
     int milestone_iscomplete;
     String milestoneText,milestoneStartdate,milestoneEnddate;
 
+    boolean isPlayed=false;
+
+    public boolean isPlayed() {
+        return isPlayed;
+    }
+    public void setPlayed(boolean played) {
+        isPlayed = played;
+    }
+
+
     public MilestoneModel(int milestoneNumber, int milstonedays, String milestoneText, String milestoneStartdate, String milestoneEnddate,int milestone_iscomplete) {
         this.milestoneNumber = milestoneNumber;
         this.milstonedays = milstonedays;
