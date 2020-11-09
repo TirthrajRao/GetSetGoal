@@ -14,16 +14,15 @@
             <RelativeLayout
                 android:background="#C6C5CD"
                 android:layout_gravity="center_horizontal"
-                android:layout_width="100dp"
-                android:layout_height="200dp">
+                android:layout_width="110dp"
+                android:layout_height="250dp">
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:layout_centerInParent="true"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
                     app:lottie_autoPlay="true"
-                    app:lottie_fileName="anim_even_coin.json"
+                    app:lottie_fileName="third.json"
                     app:lottie_imageAssetsFolder="images/"
                     app:lottie_loop="false" />
 
@@ -38,17 +37,16 @@
             <RelativeLayout
                 android:background="#F8C1C1"
                 android:layout_gravity="center_horizontal"
-                android:layout_width="100dp"
-                android:layout_height="200dp">
+                android:layout_width="110dp"
+                android:layout_height="250dp">
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/iv_lotiodd"
                     android:layout_centerInParent="true"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
                     app:lottie_autoPlay="true"
-                    app:lottie_fileName="filled_even_coin.json"
+                    app:lottie_fileName="second.json"
                     app:lottie_imageAssetsFolder="images/"
                     app:lottie_loop="false" />
 
@@ -61,20 +59,18 @@
 
             </RelativeLayout>
 
-
             <RelativeLayout
                 android:background="#C6C5CD"
                 android:layout_gravity="center_horizontal"
-                android:layout_width="100dp"
-                android:layout_height="200dp">
+                android:layout_width="110dp"
+                android:layout_height="250dp">
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:layout_centerInParent="true"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:lottie_autoPlay="true"
-                    app:lottie_fileName="dashed_even_coin.json"
-                    android:scaleType="centerCrop"
+                    app:lottie_fileName="first.json"
                     app:lottie_imageAssetsFolder="images/"
                     app:lottie_loop="false" />
 

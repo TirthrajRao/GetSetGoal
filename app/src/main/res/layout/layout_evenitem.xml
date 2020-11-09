@@ -7,8 +7,8 @@
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/coin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         app:lottie_autoPlay="true"
         app:lottie_fileName="dashed_even_coin.json"
         app:lottie_imageAssetsFolder="images/"
@@ -25,7 +25,7 @@
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lotti"
         android:layout_width="110dp"
-        android:layout_height="200dp"
+        android:layout_height="match_parent"
         android:scaleType="centerCrop"
         app:lottie_autoPlay="true"
         app:lottie_fileName="dashed_even.json"
@@ -41,21 +41,27 @@
             android:id="@+id/tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
             android:layout_toLeftOf="@+id/rl_disable"
             android:text="date"
+            android:gravity="center"
+            android:background="@drawable/bg_rect_gray"
+            android:maxLines="1"
+            android:textSize="12dp"
+            android:padding="3dp"
+            android:textColor="@color/colorDarkGray"
             />
 
         <RelativeLayout
             android:id="@+id/rl_disable"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true">
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="20dp">
 
             <ImageView
                 android:id="@+id/iv_disable"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/ic_disabled" />
 
         </RelativeLayout>
@@ -64,12 +70,17 @@
             android:id="@+id/tv_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
             android:text="date"
             android:layout_toRightOf="@+id/rl_disable"
-            android:layout_marginStart="-40dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginLeft="-40dp" />
+            android:layout_marginLeft="-55dp"
+            android:background="@drawable/bg_rect_gray"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:padding="3dp"
+            android:textSize="12dp"
+            android:layout_marginRight="40dp"
+            android:textColor="@color/colorDarkGray"
+            />
 
     </RelativeLayout>
 

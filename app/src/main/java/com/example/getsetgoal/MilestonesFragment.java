@@ -49,6 +49,8 @@ public class MilestonesFragment extends Fragment {
             int milestonestartdateindex = cur1.getColumnIndex("Milestone_Startdate");
             int milestoneenddateindex = cur1.getColumnIndex("Milestone_Enddate");
             int milestoneIscompletedIndex = cur1.getColumnIndex("Milestone_Iscomplete");
+            int milestoneStatusindex = cur1.getColumnIndex("Milestone_Status");
+            int milestoneTimeindex = cur1.getColumnIndex("Milestone_Time");
             while (cur1.moveToNext()) {
                 int milestonenumber = cur1.getInt(milestonenumberindex);
                 String milestonetext = cur1.getString(milestonetextindex);
@@ -57,7 +59,9 @@ public class MilestonesFragment extends Fragment {
                 String milestoneenddate = cur1.getString(milestoneenddateindex);
                 int milestoneIscompleted = cur1.getInt(milestoneIscompletedIndex);
                 completedms=completedms+milestoneIscompleted;
-                milestonedata.add(new MilestoneModel(milestonenumber, milestonedays, milestonetext, milestonestartdate, milestoneenddate,milestoneIscompleted));
+                String milestoneStatus = cur1.getString(milestoneStatusindex);
+                String milestoneTime = cur1.getString(milestoneTimeindex);
+                milestonedata.add(new MilestoneModel(milestonenumber, milestonedays, milestonetext, milestonestartdate, milestoneenddate,milestoneIscompleted,milestoneStatus,milestoneTime));
             }
 
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());

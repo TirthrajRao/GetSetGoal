@@ -6,8 +6,14 @@ public class MilestoneModel implements Serializable {
 
     int milestoneNumber;
     int milstonedays;
-    int milestone_iscomplete;
-    String milestoneText,milestoneStartdate,milestoneEnddate;
+    int milestone_iscomplete=0;
+    String milestoneText;
+    String milestoneStartdate;
+    String milestoneEnddate;
+
+
+    String milestoneStatus="";
+    String milestoneTime="";
 
     boolean isPlayed=false;
 
@@ -19,18 +25,36 @@ public class MilestoneModel implements Serializable {
     }
 
 
-    public MilestoneModel(int milestoneNumber, int milstonedays, String milestoneText, String milestoneStartdate, String milestoneEnddate,int milestone_iscomplete) {
+    public MilestoneModel(int milestoneNumber, int milstonedays, String milestoneText, String milestoneStartdate, String milestoneEnddate,int milestone_iscomplete,String milestoneStatus,String milestoneTime) {
         this.milestoneNumber = milestoneNumber;
         this.milstonedays = milstonedays;
         this.milestoneText = milestoneText;
         this.milestoneStartdate = milestoneStartdate;
         this.milestoneEnddate = milestoneEnddate;
         this.milestone_iscomplete=milestone_iscomplete;
+        this.milestoneStatus=milestoneStatus;
+        this.milestoneTime=milestoneTime;
     }
 
     public MilestoneModel(int milstonedays, String milestoneText) {
         this.milstonedays = milstonedays;
         this.milestoneText = milestoneText;
+    }
+
+    public String getMilestoneStatus() {
+        return milestoneStatus;
+    }
+
+    public void setMilestoneStatus(String milestoneStatus) {
+        this.milestoneStatus = milestoneStatus;
+    }
+
+    public String getMilestoneTime() {
+        return milestoneTime;
+    }
+
+    public void setMilestoneTime(String milestoneTime) {
+        this.milestoneTime = milestoneTime;
     }
 
     public int getMilestoneNumber() {

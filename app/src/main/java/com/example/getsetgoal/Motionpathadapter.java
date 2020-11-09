@@ -86,7 +86,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             if (pos == milestoneModels.size() - 1) {
                 coin.setVisibility(View.VISIBLE);
-                if (milestone.getMilestone_iscomplete()==1 || milestone.isPlayed()) {
+                if (milestone.getMilestone_iscomplete() == 1 || milestone.isPlayed()) {
                     coin.setAnimation("filled_odd_coin.json");
                     coin.playAnimation();
                 } else {
@@ -98,7 +98,12 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
 
             tv_text.setText("MS" + milestone.getMilestoneNumber() + ":" + milestone.getMilestoneText());
-            tv_date.setText(milestone.getMilestoneStartdate());
+
+
+            String date[]=milestone.getMilestoneStartdate().split("/");
+            String strDate=date[0]+"|"+date[1];
+
+            tv_date.setText(strDate);
 
             iv_disable.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -106,15 +111,13 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     if (!isRunning) {
                         if (isPreviousMilestoneComleted(pos)) {
 
-                            if(milestone.getMilestone_iscomplete()==0)
-                            {
+                            if (milestone.getMilestone_iscomplete() == 0) {
                                 if (milestone.isPlayed()) {
-                                    openUpdateDialog(milestone, getAdapterPosition(),iv_disable);
+                                    openUpdateDialog(milestone, getAdapterPosition(), iv_disable,"anim_odd_coin.json");
                                 } else {
-                                    playAnimation(milestone, lotti, pos, "anim_odd.json",coin,"anim_odd_coin.json");
+                                    playAnimation(milestone, pos, "anim_odd.json");
                                 }
-                            }
-                            else {
+                            } else {
                                 Toast.makeText(context, "milestone already completed", Toast.LENGTH_LONG).show();
                             }
                         } else {
@@ -125,21 +128,155 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             });
 
 
-            if (milestone.getMilestone_iscomplete() == 1) {
-                iv_disable.setImageResource(R.drawable.ic_enabled);
-            } else {
-                iv_disable.setImageResource(R.drawable.ic_disabled);
-            }
 
-            if (milestone.getMilestone_iscomplete()==1 || milestone.isPlayed()) {
+            if (milestone.getMilestone_iscomplete() == 1) {
                 lotti.setAnimation("filled_odd.json");
                 lotti.playAnimation();
+
+                tv_date.setBackgroundResource(R.drawable.bg_rect_purple);
+                tv_date.setTextColor(context.getResources().getColor(R.color.colorDarkPurple));
+
+                tv_text.setBackgroundResource(R.drawable.bg_rect_purple);
+                tv_text.setTextColor(context.getResources().getColor(R.color.colorDarkPurple));
+                iv_disable.setImageResource(R.drawable.ic_enabled);
+
+
+            } else if (milestone.isPlayed()) {
+                lotti.setAnimation("filled_odd.json");
+                lotti.playAnimation();
+
+
+                tv_date.setBackgroundResource(R.drawable.bg_rect_purple);
+                tv_date.setTextColor(context.getResources().getColor(R.color.colorDarkPurple));
+
+                tv_text.setBackgroundResource(R.drawable.bg_rect_purple);
+                tv_text.setTextColor(context.getResources().getColor(R.color.colorDarkPurple));
+                iv_disable.setImageResource(R.drawable.ic_unfilled_enabled);
+            }
+            if (isPreviousMilestoneComleted(pos)) {
+                if (milestone.getMilestone_iscomplete() == 0) {
+                    if (!milestone.isPlayed()) {
+                        playAnimation(milestone, pos, "anim_odd.json");
+                    }
+                }
             } else {
                 lotti.setAnimation("dashed_odd.json");
                 lotti.playAnimation();
+
+                tv_date.setBackgroundResource(R.drawable.bg_rect_gray);
+                tv_date.setTextColor(context.getResources().getColor(R.color.colorDarkGray));
+
+                tv_text.setBackgroundResource(R.drawable.bg_rect_gray);
+                tv_text.setTextColor(context.getResources().getColor(R.color.colorDarkGray));
+                iv_disable.setImageResource(R.drawable.ic_disabled);
+            }
+        }
+
+
+        public void openUpdateDialog(final MilestoneModel milestoneModel, final int pos, final ImageView iv_disable,final String coinFile) {
+
+            if (milestoneModel.getMilestone_iscomplete() == 0) {
+                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context)
+                        .setIcon(R.drawable.ic_enabled)
+                        .setTitle("Milestone " + milestoneModel.getMilestoneText());
+
+                final View customLayout
+                        = context.getLayoutInflater().inflate(R.layout.layout_update_milestone, null);
+                alertDialog.setView(customLayout);
+                final AlertDialog dialog = alertDialog.create();
+
+                Button btn_complete = customLayout.findViewById(R.id.btn_complete);
+                Button btn_notcomplete = customLayout.findViewById(R.id.btn_notcomplete);
+                Button btn_partial = customLayout.findViewById(R.id.btn_partial);
+
+                btn_complete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                        milestoneModel.setMilestone_iscomplete(1);
+//                    notifyItemChanged(pos);
+                        iv_disable.setImageResource(R.drawable.ic_enabled);
+                        msinterface.onmilestoneUpdate(milestoneModel);
+
+                        notifyItemChanged(pos+1);
+
+                        if (coin != null) {
+                            if (coin.getVisibility() == View.VISIBLE) {
+                                playCoinAnimation(coin, coinFile);
+                            }
+                        }
+                    }
+                });
+
+                btn_notcomplete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                        if (coin != null) {
+                            if (coin.getVisibility() == View.VISIBLE) {
+                                playCoinAnimation(coin, coinFile);
+                            }
+                        }
+                    }
+                });
+
+                btn_partial.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                        milestoneModel.setMilestone_iscomplete(1);
+                        notifyItemChanged(pos);
+                        msinterface.onmilestoneUpdate(milestoneModel);
+
+                        if (coin != null) {
+                            if (coin.getVisibility() == View.VISIBLE) {
+                                playCoinAnimation(coin, coinFile);
+                            }
+                        }
+                    }
+                });
+                dialog.show();
+            } else {
+                Toast.makeText(context, "Milestone is already completed", Toast.LENGTH_SHORT).show();
             }
 
+        }
 
+        private void playAnimation(final MilestoneModel milestoneModel,  final int pos, final String animName) {
+            lotti.setAnimation(animName);
+            lotti.playAnimation();
+            lotti.addAnimatorListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
+                    isRunning = true;
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    milestoneModel.setPlayed(true);
+//                notifyItemChanged(pos);
+                    isRunning = false;
+
+                    tv_date.setBackgroundResource(R.drawable.bg_rect_purple);
+                    tv_date.setTextColor(context.getResources().getColor(R.color.colorDarkPurple));
+
+                    tv_text.setBackgroundResource(R.drawable.bg_rect_purple);
+                    tv_text.setTextColor(context.getResources().getColor(R.color.colorDarkPurple));
+                    iv_disable.setImageResource(R.drawable.ic_unfilled_enabled);
+
+
+
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animator) {
+                    isRunning = false;
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animator) {
+                }
+            });
         }
     }
 
@@ -160,7 +297,11 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public void setData(final MilestoneModel milestone, final int pos) {
 
             tv_text.setText("MS" + milestone.getMilestoneNumber() + ":" + milestone.getMilestoneText());
-            tv_date.setText(milestone.getMilestoneStartdate());
+
+            String date[]=milestone.getMilestoneStartdate().split("/");
+            String strDate=date[0]+"|"+date[1];
+
+            tv_date.setText(strDate);
 
             iv_disable.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -168,14 +309,13 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     if (!isRunning) {
                         if (isPreviousMilestoneComleted(pos)) {
                             if (isDateAfterORSame(pos)) {
-                                if(milestone.getMilestone_iscomplete()==0) {
+                                if (milestone.getMilestone_iscomplete() == 0) {
                                     if (milestone.isPlayed()) {
-                                        openUpdateDialog(milestone, getAdapterPosition(),iv_disable);
+                                        openUpdateDialog(milestone, getAdapterPosition(), iv_disable);
                                     } else {
-                                        playAnimation(milestone, lotti, pos, "anim_first.json",null,"");
+                                        playAnimation(milestone, pos, "anim_first.json");
                                     }
-                                }
-                                else {
+                                } else {
                                     Toast.makeText(context, "milestone already completed", Toast.LENGTH_LONG).show();
                                 }
                             } else {
@@ -190,75 +330,150 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
             if (milestone.getMilestone_iscomplete() == 1) {
-                iv_disable.setImageResource(R.drawable.ic_enabled);
-            } else {
-                iv_disable.setImageResource(R.drawable.ic_disabled);
-            }
-
-            if (milestone.getMilestone_iscomplete()==1 || milestone.isPlayed()) {
                 lotti.setAnimation("filled_first.json");
                 lotti.playAnimation();
+
+                tv_date.setBackgroundResource(R.drawable.bg_rect_purple);
+                tv_date.setTextColor(context.getResources().getColor(R.color.colorDarkPurple));
+
+                tv_text.setBackgroundResource(R.drawable.bg_rect_purple);
+                tv_text.setTextColor(context.getResources().getColor(R.color.colorDarkPurple));
+                iv_disable.setImageResource(R.drawable.ic_enabled);
+
+
+            } else if (milestone.isPlayed()) {
+                lotti.setAnimation("filled_first.json");
+                lotti.playAnimation();
+
+
+                tv_date.setBackgroundResource(R.drawable.bg_rect_purple);
+                tv_date.setTextColor(context.getResources().getColor(R.color.colorDarkPurple));
+
+                tv_text.setBackgroundResource(R.drawable.bg_rect_purple);
+                tv_text.setTextColor(context.getResources().getColor(R.color.colorDarkPurple));
+                iv_disable.setImageResource(R.drawable.ic_unfilled_enabled);
+            }
+            if (isPreviousMilestoneComleted(pos)) {
+                if (isDateAfterORSame(pos)) {
+                    if (milestone.getMilestone_iscomplete() == 0) {
+                        if (!milestone.isPlayed()) {
+                            playAnimation(milestone, pos, "anim_first.json");
+                        }
+                    }
+                }
             } else {
                 lotti.setAnimation("dashed_first.json");
                 lotti.playAnimation();
+
+                tv_date.setBackgroundResource(R.drawable.bg_rect_gray);
+                tv_date.setTextColor(context.getResources().getColor(R.color.colorDarkGray));
+
+                tv_text.setBackgroundResource(R.drawable.bg_rect_gray);
+                tv_text.setTextColor(context.getResources().getColor(R.color.colorDarkGray));
+                iv_disable.setImageResource(R.drawable.ic_disabled);
             }
         }
-    }
 
-    public void openUpdateDialog(final MilestoneModel milestoneModel, final int pos,final ImageView iv_disable) {
 
-        if (milestoneModel.getMilestone_iscomplete() == 0) {
-            final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context)
-                    .setIcon(R.drawable.ic_enabled)
-                    .setTitle("Milestone " + milestoneModel.getMilestoneText());
+        public void openUpdateDialog(final MilestoneModel milestoneModel, final int pos, final ImageView iv_disable) {
 
-            final View customLayout
-                    = context.getLayoutInflater().inflate(R.layout.layout_update_milestone, null);
-            alertDialog.setView(customLayout);
-            final AlertDialog dialog = alertDialog.create();
+            if (milestoneModel.getMilestone_iscomplete() == 0) {
+                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context)
+                        .setIcon(R.drawable.ic_enabled)
+                        .setTitle("Milestone " + milestoneModel.getMilestoneText());
 
-            Button btn_complete = customLayout.findViewById(R.id.btn_complete);
-            Button btn_notcomplete = customLayout.findViewById(R.id.btn_notcomplete);
-            Button btn_partial = customLayout.findViewById(R.id.btn_partial);
+                final View customLayout
+                        = context.getLayoutInflater().inflate(R.layout.layout_update_milestone, null);
+                alertDialog.setView(customLayout);
+                final AlertDialog dialog = alertDialog.create();
 
-            btn_complete.setOnClickListener(new View.OnClickListener() {
+                Button btn_complete = customLayout.findViewById(R.id.btn_complete);
+                Button btn_notcomplete = customLayout.findViewById(R.id.btn_notcomplete);
+                Button btn_partial = customLayout.findViewById(R.id.btn_partial);
+
+                btn_complete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                        milestoneModel.setMilestone_iscomplete(1);
+//                     notifyItemChanged(pos);
+                        iv_disable.setImageResource(R.drawable.ic_enabled);
+                        msinterface.onmilestoneUpdate(milestoneModel);
+
+                        notifyItemChanged(pos+1);
+
+                    }
+                });
+
+                btn_notcomplete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+
+                btn_partial.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                        milestoneModel.setMilestone_iscomplete(1);
+                        notifyItemChanged(pos);
+                        msinterface.onmilestoneUpdate(milestoneModel);
+                    }
+                });
+                dialog.show();
+            } else {
+                Toast.makeText(context, "Milestone is already completed", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+        private void playAnimation(final MilestoneModel milestoneModel,final int pos,final String animName) {
+            lotti.setAnimation(animName);
+            lotti.playAnimation();
+            lotti.addAnimatorListener(new Animator.AnimatorListener() {
                 @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                    milestoneModel.setMilestone_iscomplete(1);
-//                    notifyItemChanged(pos);
-                    iv_disable.setImageResource(R.drawable.ic_enabled);
-                    msinterface.onmilestoneUpdate(milestoneModel);
+                public void onAnimationStart(Animator animator) {
+                    isRunning = true;
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    milestoneModel.setPlayed(true);
+
+//                notifyItemChanged(pos);
+                    isRunning = false;
+
+                    tv_date.setBackgroundResource(R.drawable.bg_rect_purple);
+                    tv_date.setTextColor(context.getResources().getColor(R.color.colorDarkPurple));
+
+                    tv_text.setBackgroundResource(R.drawable.bg_rect_purple);
+                    tv_text.setTextColor(context.getResources().getColor(R.color.colorDarkPurple));
+                    iv_disable.setImageResource(R.drawable.ic_unfilled_enabled);
+
+
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animator) {
+                    isRunning = false;
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animator) {
                 }
             });
-
-            btn_notcomplete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                }
-            });
-
-            btn_partial.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                    milestoneModel.setMilestone_iscomplete(1);
-                    notifyItemChanged(pos);
-                    msinterface.onmilestoneUpdate(milestoneModel);
-                }
-            });
-            dialog.show();
-        } else {
-            Toast.makeText(context, "Milestone is already completed", Toast.LENGTH_SHORT).show();
         }
 
     }
 
-    private void playAnimation(final MilestoneModel milestoneModel, final LottieAnimationView iv_milestone, final int pos, final String animName, final LottieAnimationView coin,final String coinFile) {
-        iv_milestone.setAnimation(animName);
-        iv_milestone.playAnimation();
-        iv_milestone.addAnimatorListener(new Animator.AnimatorListener() {
+
+
+
+    public void playCoinAnimation(final LottieAnimationView coin, final String coinFile) {
+        coin.setAnimation(coinFile);
+        coin.playAnimation();
+        coin.addAnimatorListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
                 isRunning = true;
@@ -266,18 +481,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             @Override
             public void onAnimationEnd(Animator animator) {
-                milestoneModel.setPlayed(true);
-//                notifyItemChanged(pos);
                 isRunning = false;
-
-                if(coin!=null) {
-                    if(coin.getVisibility()==View.VISIBLE)
-                    {
-                        playCoinAnimation(coin,coinFile);
-                    }
-                }
-
-
             }
 
             @Override
@@ -290,34 +494,6 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
         });
     }
-
-
-   public void playCoinAnimation(final LottieAnimationView coin,final String coinFile)
-   {
-       coin.setAnimation(coinFile);
-       coin.playAnimation();
-       coin.addAnimatorListener(new Animator.AnimatorListener() {
-           @Override
-           public void onAnimationStart(Animator animator) {
-               isRunning = true;
-           }
-
-           @Override
-           public void onAnimationEnd(Animator animator) {
-               isRunning = false;
-           }
-
-           @Override
-           public void onAnimationCancel(Animator animator) {
-               isRunning = false;
-           }
-
-           @Override
-           public void onAnimationRepeat(Animator animator) {
-           }
-       });
-   }
-
 
 
     class ViewHolderEven extends RecyclerView.ViewHolder {
@@ -341,7 +517,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             if (pos == milestoneModels.size() - 1) {
                 coin.setVisibility(View.VISIBLE);
-                if (milestone.getMilestone_iscomplete()==1 || milestone.isPlayed()) {
+                if (milestone.getMilestone_iscomplete() == 1 || milestone.isPlayed()) {
                     coin.setAnimation("filled_even_coin.json");
                     coin.playAnimation();
                 } else {
@@ -353,7 +529,11 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
 
             tv_text.setText("MS" + milestone.getMilestoneNumber() + ":" + milestone.getMilestoneText());
-            tv_date.setText(milestone.getMilestoneStartdate());
+
+            String date[]=milestone.getMilestoneStartdate().split("/");
+            String strDate=date[0]+"|"+date[1];
+
+            tv_date.setText(strDate);
 
             iv_disable.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -361,14 +541,13 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     if (!isRunning) {
                         if (isPreviousMilestoneComleted(pos)) {
 
-                            if(milestone.getMilestone_iscomplete()==0) {
+                            if (milestone.getMilestone_iscomplete() == 0) {
                                 if (milestone.isPlayed()) {
-                                    openUpdateDialog(milestone, getAdapterPosition(),iv_disable);
+                                    openUpdateDialog(milestone, getAdapterPosition(), iv_disable,"anim_even_coin.json");
                                 } else {
-                                    playAnimation(milestone, lotti, pos, "anim_even.json",coin,"anim_even_coin.json");
+                                    playAnimation(milestone, pos, "anim_even.json" );
                                 }
-                            }
-                            else {
+                            } else {
                                 Toast.makeText(context, "milestone already completed", Toast.LENGTH_LONG).show();
                             }
 
@@ -381,28 +560,162 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
             if (milestone.getMilestone_iscomplete() == 1) {
-                iv_disable.setImageResource(R.drawable.ic_enabled);
-            } else {
-                iv_disable.setImageResource(R.drawable.ic_disabled);
-            }
-
-            if (milestone.getMilestone_iscomplete()==1 || milestone.isPlayed()) {
                 lotti.setAnimation("filled_even.json");
                 lotti.playAnimation();
+
+                tv_date.setBackgroundResource(R.drawable.bg_rect_purple);
+                tv_date.setTextColor(context.getResources().getColor(R.color.colorDarkPurple));
+
+                tv_text.setBackgroundResource(R.drawable.bg_rect_purple);
+                tv_text.setTextColor(context.getResources().getColor(R.color.colorDarkPurple));
+                iv_disable.setImageResource(R.drawable.ic_enabled);
+
+
+            } else if (milestone.isPlayed()) {
+                lotti.setAnimation("filled_even.json");
+                lotti.playAnimation();
+
+
+                tv_date.setBackgroundResource(R.drawable.bg_rect_purple);
+                tv_date.setTextColor(context.getResources().getColor(R.color.colorDarkPurple));
+
+                tv_text.setBackgroundResource(R.drawable.bg_rect_purple);
+                tv_text.setTextColor(context.getResources().getColor(R.color.colorDarkPurple));
+                iv_disable.setImageResource(R.drawable.ic_unfilled_enabled);
+            }
+            if (isPreviousMilestoneComleted(pos)) {
+                if (milestone.getMilestone_iscomplete() == 0) {
+                    if (!milestone.isPlayed()) {
+                        playAnimation(milestone, pos, "anim_even.json");
+                    }
+                }
             } else {
                 lotti.setAnimation("dashed_even.json");
                 lotti.playAnimation();
+
+                tv_date.setBackgroundResource(R.drawable.bg_rect_gray);
+                tv_date.setTextColor(context.getResources().getColor(R.color.colorDarkGray));
+
+                tv_text.setBackgroundResource(R.drawable.bg_rect_gray);
+                tv_text.setTextColor(context.getResources().getColor(R.color.colorDarkGray));
+                iv_disable.setImageResource(R.drawable.ic_disabled);
             }
+        }
+
+
+        public void openUpdateDialog(final MilestoneModel milestoneModel, final int pos, final ImageView iv_disable, final String coinFile) {
+
+            if (milestoneModel.getMilestone_iscomplete() == 0) {
+                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context)
+                        .setIcon(R.drawable.ic_enabled)
+                        .setTitle("Milestone " + milestoneModel.getMilestoneText());
+
+                final View customLayout
+                        = context.getLayoutInflater().inflate(R.layout.layout_update_milestone, null);
+                alertDialog.setView(customLayout);
+                final AlertDialog dialog = alertDialog.create();
+
+                Button btn_complete = customLayout.findViewById(R.id.btn_complete);
+                Button btn_notcomplete = customLayout.findViewById(R.id.btn_notcomplete);
+                Button btn_partial = customLayout.findViewById(R.id.btn_partial);
+
+                btn_complete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                        milestoneModel.setMilestone_iscomplete(1);
+//                    notifyItemChanged(pos);
+                        iv_disable.setImageResource(R.drawable.ic_enabled);
+                        msinterface.onmilestoneUpdate(milestoneModel);
+
+                        notifyItemChanged(pos+1);
+
+                        if (coin != null) {
+                            if (coin.getVisibility() == View.VISIBLE) {
+                                playCoinAnimation(coin, coinFile);
+                            }
+                        }
+                    }
+                });
+
+                btn_notcomplete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                        if (coin != null) {
+                            if (coin.getVisibility() == View.VISIBLE) {
+                                playCoinAnimation(coin, coinFile);
+                            }
+                        }
+                    }
+                });
+
+                btn_partial.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                        milestoneModel.setMilestone_iscomplete(1);
+                        notifyItemChanged(pos);
+                        msinterface.onmilestoneUpdate(milestoneModel);
+
+                        if (coin != null) {
+                            if (coin.getVisibility() == View.VISIBLE) {
+                                playCoinAnimation(coin, coinFile);
+                            }
+                        }
+                    }
+                });
+                dialog.show();
+            } else {
+                Toast.makeText(context, "Milestone is already completed", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+        private void playAnimation(final MilestoneModel milestoneModel,final int pos, final String animName) {
+            lotti.setAnimation(animName);
+            lotti.playAnimation();
+            lotti.addAnimatorListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
+                    isRunning = true;
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    milestoneModel.setPlayed(true);
+
+                    tv_date.setBackgroundResource(R.drawable.bg_rect_purple);
+                    tv_date.setTextColor(context.getResources().getColor(R.color.colorDarkPurple));
+
+                    tv_text.setBackgroundResource(R.drawable.bg_rect_purple);
+                    tv_text.setTextColor(context.getResources().getColor(R.color.colorDarkPurple));
+                    iv_disable.setImageResource(R.drawable.ic_unfilled_enabled);
+
+//                notifyItemChanged(pos);
+                    isRunning = false;
+
+
+
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animator) {
+                    isRunning = false;
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animator) {
+                }
+            });
         }
     }
 
     public boolean isPreviousMilestoneComleted(int pos) {
         boolean isAllCompleted = true;
-        for (int i = pos - 1; i >= 0; i--) {
-            if (milestoneModels.get(i).getMilestone_iscomplete() == 0) {
-                isAllCompleted = false;
-                break;
-            }
+        if (pos == 0) {
+        } else if (milestoneModels.get(pos - 1).getMilestone_iscomplete() == 0) {
+            isAllCompleted = false;
         }
         return isAllCompleted;
     }
@@ -411,11 +724,21 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         boolean isAfter = false;
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         try {
-            Date d1 = sdf.parse(milestoneModels.get(pos).getMilestoneStartdate());
-            String data = sdf.format(new Date());
-            Date d2=sdf.parse(data);
 
-            isAfter = d1.compareTo(d2) < 0 || d1.compareTo(d2)==0;
+            String data = sdf.format(new Date());
+            Date d1 = sdf.parse(data);
+            Date d2 = sdf.parse(milestoneModels.get(pos).getMilestoneStartdate());
+
+            if(d1.after(d2)) {
+                isAfter=true;
+            }
+            else if(d1.before(d2)) {
+                isAfter=false;
+            }
+            else if(d1.equals(d2)) {
+                isAfter=true;
+            }
+
         } catch (ParseException e) {
             e.printStackTrace();
         }

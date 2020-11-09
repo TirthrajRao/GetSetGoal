@@ -7,4 +7,8 @@
     <color name="colorBlack">#000000</color>
     <color name="colorFilled">#634975</color>
     <color name="colorDashed">#DFA8E4</color>
+    <color name="colorDarkGray">#b2b2b2</color>
+    <color name="colorLightGray">#f6f6f6</color>
+    <color name="colorLightPurple">#fdf1ff</color>
+    <color name="colorDarkPurple">#bd68bb</color>
 </resources>
