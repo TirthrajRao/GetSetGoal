@@ -6,8 +6,8 @@
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/coin"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_centerHorizontal="true"
         app:lottie_autoPlay="true"
         app:lottie_fileName="dashed_odd_coin.json"
@@ -17,15 +17,14 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="250dp"
         android:layout_below="@+id/coin">
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lotti"
-            android:layout_width="110dp"
-            android:layout_height="200dp"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
-            android:scaleType="centerCrop"
             app:lottie_autoPlay="true"
             app:lottie_fileName="dashed_odd.json"
             app:lottie_imageAssetsFolder="images/"
@@ -39,7 +38,7 @@
                 android:id="@+id/tv_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="-55dp"
+                android:layout_marginRight="-95dp"
                 android:layout_marginLeft="40dp"
                 android:layout_toLeftOf="@+id/rl_disable"
                 android:text="date"
@@ -52,7 +51,7 @@
 
             <RelativeLayout
                 android:id="@+id/rl_disable"
-                android:layout_width="110dp"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:gravity="end">

@@ -11,10 +11,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+
+
             <RelativeLayout
                 android:background="#C6C5CD"
                 android:layout_gravity="center_horizontal"
-                android:layout_width="110dp"
+                android:layout_width="150dp"
                 android:layout_height="250dp">
 
                 <com.airbnb.lottie.LottieAnimationView
@@ -22,7 +24,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:lottie_autoPlay="true"
-                    app:lottie_fileName="third.json"
+                    app:lottie_fileName="dashed_even.json"
                     app:lottie_imageAssetsFolder="images/"
                     app:lottie_loop="false" />
 
@@ -37,7 +39,7 @@
             <RelativeLayout
                 android:background="#F8C1C1"
                 android:layout_gravity="center_horizontal"
-                android:layout_width="110dp"
+                android:layout_width="150dp"
                 android:layout_height="250dp">
 
                 <com.airbnb.lottie.LottieAnimationView
@@ -46,7 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:lottie_autoPlay="true"
-                    app:lottie_fileName="second.json"
+                    app:lottie_fileName="dashed_odd.json"
                     app:lottie_imageAssetsFolder="images/"
                     app:lottie_loop="false" />
 
@@ -62,7 +64,7 @@
             <RelativeLayout
                 android:background="#C6C5CD"
                 android:layout_gravity="center_horizontal"
-                android:layout_width="110dp"
+                android:layout_width="150dp"
                 android:layout_height="250dp">
 
                 <com.airbnb.lottie.LottieAnimationView
@@ -70,7 +72,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:lottie_autoPlay="true"
-                    app:lottie_fileName="first.json"
+                    app:lottie_fileName="dashed_first.json"
                     app:lottie_imageAssetsFolder="images/"
                     app:lottie_loop="false" />
 

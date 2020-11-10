@@ -7,14 +7,12 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_below="@+id/coin">
+        android:layout_height="250dp">
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lotti"
-            android:layout_width="110dp"
+            android:layout_width="150dp"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
             app:lottie_autoPlay="true"
             app:lottie_fileName="dashed_first.json"
             app:lottie_imageAssetsFolder="images/"
@@ -51,7 +49,7 @@
 
         <RelativeLayout
             android:id="@+id/rl_disable"
-            android:layout_width="110dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="20dp">
@@ -70,7 +68,7 @@
             android:layout_height="wrap_content"
             android:text="date"
             android:layout_toRightOf="@+id/rl_disable"
-            android:layout_marginLeft="-55dp"
+            android:layout_marginLeft="-95dp"
             android:background="@drawable/bg_rect_gray"
             android:maxLines="2"
             android:ellipsize="end"

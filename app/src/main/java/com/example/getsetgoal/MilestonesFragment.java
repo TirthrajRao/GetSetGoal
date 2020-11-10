@@ -73,7 +73,9 @@ public class MilestonesFragment extends Fragment {
                 @Override
                 public void onmilestoneUpdate(final MilestoneModel milestoneModel){
                     ContentValues cv = new ContentValues();
-                    cv.put("Milestone_Iscomplete",1); //These Fields should be your String values of actual column names
+                    cv.put("Milestone_Iscomplete",milestoneModel.getMilestone_iscomplete()); //These Fields should be your String values of actual column names
+                    cv.put("Milestone_Status",milestoneModel.getMilestoneStatus()); //These Fields should be your String values of actual column names
+                    cv.put("Milestone_Time",milestoneModel.getMilestoneTime()); //These Fields should be your String values of actual column names
                     database.update("MilestoneDetails", cv, "Milestone_Number="+milestoneModel.getMilestoneNumber()+" AND "+"Goal_id="+id, null);
                 }
             },(milestonedata.size()==completedms) ? true : false);
