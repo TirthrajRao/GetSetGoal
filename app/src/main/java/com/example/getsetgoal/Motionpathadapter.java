@@ -29,9 +29,9 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     boolean isRunning = false;
     boolean ismilestonecompleted;
 
-    public static final String COMPLETED="Completed";
-    public static final String NOT_COMPLETED="Not Completed";
-    public static final String PARTIALLY_COMPLETED="Partially Completed";
+    public static final String COMPLETED = "Completed";
+    public static final String NOT_COMPLETED = "Not Completed";
+    public static final String PARTIALLY_COMPLETED = "Partially Completed";
 
     public Motionpathadapter(Activity context, List<MilestoneModel> milestoneModels, MilestoneInterface msinterface, boolean ismilestonecompleted) {
         this.milestoneModels = milestoneModels;
@@ -90,7 +90,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             if (pos == milestoneModels.size() - 1) {
                 coin.setVisibility(View.VISIBLE);
-                if (milestone.getMilestone_iscomplete() == 1 || milestone.isPlayed()) {
+                if (milestone.getMilestone_iscomplete() == 1) {
                     coin.setAnimation("filled_odd_coin.json");
                     coin.playAnimation();
                 } else {
@@ -103,9 +103,8 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             tv_text.setText("MS" + milestone.getMilestoneNumber() + ":" + milestone.getMilestoneText());
 
-
-            String date[]=milestone.getMilestoneStartdate().split("/");
-            String strDate=date[0]+"|"+date[1];
+            String date[] = milestone.getMilestoneStartdate().split("/");
+            String strDate = date[0] + "|" + date[1];
 
             tv_date.setText(strDate);
 
@@ -114,10 +113,9 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 public void onClick(View view) {
                     if (!isRunning) {
                         if (isPreviousMilestoneComleted(pos)) {
-
                             if (milestone.getMilestone_iscomplete() == 0) {
-                                if (milestone.isPlayed()) {
-                                    openUpdateDialog(milestone, getAdapterPosition(), iv_disable,"anim_odd_coin.json");
+                                if (milestone.getMilestoneIsplayed() == 1) {
+                                    openUpdateDialog(milestone, getAdapterPosition(), iv_disable, "anim_odd_coin.json");
                                 } else {
                                     playAnimation(milestone, pos, "anim_odd.json");
                                 }
@@ -130,7 +128,6 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 }
             });
-
 
 
             if (milestone.getMilestone_iscomplete() == 1) {
@@ -154,7 +151,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
 
 
-            } else if (milestone.isPlayed()) {
+            } else if (milestone.getMilestoneIsplayed() == 1) {
                 lotti.setAnimation("filled_odd.json");
                 lotti.playAnimation();
 
@@ -168,7 +165,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
             if (isPreviousMilestoneComleted(pos)) {
                 if (milestone.getMilestone_iscomplete() == 0) {
-                    if (!milestone.isPlayed()) {
+                    if (milestone.getMilestoneIsplayed() == 0) {
                         playAnimation(milestone, pos, "anim_odd.json");
                     }
                 }
@@ -186,7 +183,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
 
-        public void openUpdateDialog(final MilestoneModel milestoneModel, final int pos, final ImageView iv_disable,final String coinFile) {
+        public void openUpdateDialog(final MilestoneModel milestoneModel, final int pos, final ImageView iv_disable, final String coinFile) {
 
             if (milestoneModel.getMilestone_iscomplete() == 0) {
                 final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context)
@@ -208,13 +205,13 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         dialog.dismiss();
                         milestoneModel.setMilestone_iscomplete(1);
                         milestoneModel.setMilestoneStatus(COMPLETED);
-                        milestoneModel.setMilestoneTime(System.currentTimeMillis()+"");
+                        milestoneModel.setMilestoneTime(System.currentTimeMillis() + "");
 
 //                    notifyItemChanged(pos);
                         iv_disable.setImageResource(R.drawable.ic_enabled);
                         msinterface.onmilestoneUpdate(milestoneModel);
 
-                        notifyItemChanged(pos+1);
+                        notifyItemChanged(pos + 1);
 
                         if (coin != null) {
                             if (coin.getVisibility() == View.VISIBLE) {
@@ -230,13 +227,13 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         dialog.dismiss();
                         milestoneModel.setMilestone_iscomplete(1);
                         milestoneModel.setMilestoneStatus(NOT_COMPLETED);
-                        milestoneModel.setMilestoneTime(System.currentTimeMillis()+"");
+                        milestoneModel.setMilestoneTime(System.currentTimeMillis() + "");
 
 //                    notifyItemChanged(pos);
                         iv_disable.setImageResource(R.drawable.ic_close_enabled);
                         msinterface.onmilestoneUpdate(milestoneModel);
 
-                        notifyItemChanged(pos+1);
+                        notifyItemChanged(pos + 1);
                         if (coin != null) {
                             if (coin.getVisibility() == View.VISIBLE) {
                                 playCoinAnimation(coin, coinFile);
@@ -251,13 +248,13 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         dialog.dismiss();
                         milestoneModel.setMilestone_iscomplete(1);
                         milestoneModel.setMilestoneStatus(PARTIALLY_COMPLETED);
-                        milestoneModel.setMilestoneTime(System.currentTimeMillis()+"");
+                        milestoneModel.setMilestoneTime(System.currentTimeMillis() + "");
 
 //                    notifyItemChanged(pos);
                         iv_disable.setImageResource(R.drawable.ic_enabled);
                         msinterface.onmilestoneUpdate(milestoneModel);
 
-                        notifyItemChanged(pos+1);
+                        notifyItemChanged(pos + 1);
 
                         if (coin != null) {
                             if (coin.getVisibility() == View.VISIBLE) {
@@ -273,7 +270,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         }
 
-        private void playAnimation(final MilestoneModel milestoneModel,  final int pos, final String animName) {
+        private void playAnimation(final MilestoneModel milestoneModel, final int pos, final String animName) {
             lotti.setAnimation(animName);
             lotti.playAnimation();
             lotti.addAnimatorListener(new Animator.AnimatorListener() {
@@ -285,6 +282,8 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 @Override
                 public void onAnimationEnd(Animator animator) {
                     milestoneModel.setPlayed(true);
+                    milestoneModel.setMilestoneIsplayed(1);
+                    msinterface.onmilestonePlayStatusUpdate(milestoneModel);
 //                notifyItemChanged(pos);
                     isRunning = false;
 
@@ -294,7 +293,6 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     tv_text.setBackgroundResource(R.drawable.bg_rect_purple);
                     tv_text.setTextColor(context.getResources().getColor(R.color.colorDarkPurple));
                     iv_disable.setImageResource(R.drawable.ic_unfilled_enabled);
-
 
 
                 }
@@ -329,8 +327,8 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             tv_text.setText("MS" + milestone.getMilestoneNumber() + ":" + milestone.getMilestoneText());
 
-            String date[]=milestone.getMilestoneStartdate().split("/");
-            String strDate=date[0]+"|"+date[1];
+            String date[] = milestone.getMilestoneStartdate().split("/");
+            String strDate = date[0] + "|" + date[1];
 
             tv_date.setText(strDate);
 
@@ -341,7 +339,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         if (isPreviousMilestoneComleted(pos)) {
                             if (isDateAfterORSame(pos)) {
                                 if (milestone.getMilestone_iscomplete() == 0) {
-                                    if (milestone.isPlayed()) {
+                                    if (milestone.getMilestoneIsplayed() == 1) {
                                         openUpdateDialog(milestone, getAdapterPosition(), iv_disable);
                                     } else {
                                         playAnimation(milestone, pos, "anim_first.json");
@@ -380,7 +378,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         break;
                 }
 
-            } else if (milestone.isPlayed()) {
+            } else if (milestone.getMilestoneIsplayed() == 1) {
                 lotti.setAnimation("filled_first.json");
                 lotti.playAnimation();
 
@@ -395,7 +393,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (isPreviousMilestoneComleted(pos)) {
                 if (isDateAfterORSame(pos)) {
                     if (milestone.getMilestone_iscomplete() == 0) {
-                        if (!milestone.isPlayed()) {
+                        if (milestone.getMilestoneIsplayed() == 0) {
                             playAnimation(milestone, pos, "anim_first.json");
                         }
                     }
@@ -436,12 +434,12 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         dialog.dismiss();
                         milestoneModel.setMilestone_iscomplete(1);
                         milestoneModel.setMilestoneStatus(COMPLETED);
-                        milestoneModel.setMilestoneTime(System.currentTimeMillis()+"");
+                        milestoneModel.setMilestoneTime(System.currentTimeMillis() + "");
 //                     notifyItemChanged(pos);
                         iv_disable.setImageResource(R.drawable.ic_enabled);
                         msinterface.onmilestoneUpdate(milestoneModel);
 
-                        notifyItemChanged(pos+1);
+                        notifyItemChanged(pos + 1);
 
                     }
                 });
@@ -452,12 +450,12 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         dialog.dismiss();
                         milestoneModel.setMilestone_iscomplete(1);
                         milestoneModel.setMilestoneStatus(NOT_COMPLETED);
-                        milestoneModel.setMilestoneTime(System.currentTimeMillis()+"");
+                        milestoneModel.setMilestoneTime(System.currentTimeMillis() + "");
 //                     notifyItemChanged(pos);
                         iv_disable.setImageResource(R.drawable.ic_close_enabled);
                         msinterface.onmilestoneUpdate(milestoneModel);
 
-                        notifyItemChanged(pos+1);
+                        notifyItemChanged(pos + 1);
                     }
                 });
 
@@ -467,12 +465,12 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         dialog.dismiss();
                         milestoneModel.setMilestone_iscomplete(1);
                         milestoneModel.setMilestoneStatus(PARTIALLY_COMPLETED);
-                        milestoneModel.setMilestoneTime(System.currentTimeMillis()+"");
+                        milestoneModel.setMilestoneTime(System.currentTimeMillis() + "");
 //                     notifyItemChanged(pos);
                         iv_disable.setImageResource(R.drawable.ic_enabled);
                         msinterface.onmilestoneUpdate(milestoneModel);
 
-                        notifyItemChanged(pos+1);
+                        notifyItemChanged(pos + 1);
                     }
                 });
                 dialog.show();
@@ -482,7 +480,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         }
 
-        private void playAnimation(final MilestoneModel milestoneModel,final int pos,final String animName) {
+        private void playAnimation(final MilestoneModel milestoneModel, final int pos, final String animName) {
             lotti.setAnimation(animName);
             lotti.playAnimation();
             lotti.addAnimatorListener(new Animator.AnimatorListener() {
@@ -494,7 +492,8 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 @Override
                 public void onAnimationEnd(Animator animator) {
                     milestoneModel.setPlayed(true);
-
+                    milestoneModel.setMilestoneIsplayed(1);
+                    msinterface.onmilestonePlayStatusUpdate(milestoneModel);
 //                notifyItemChanged(pos);
                     isRunning = false;
 
@@ -520,8 +519,6 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
     }
-
-
 
 
     public void playCoinAnimation(final LottieAnimationView coin, final String coinFile) {
@@ -570,7 +567,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             if (pos == milestoneModels.size() - 1) {
                 coin.setVisibility(View.VISIBLE);
-                if (milestone.getMilestone_iscomplete() == 1 || milestone.isPlayed()) {
+                if (milestone.getMilestone_iscomplete() == 1) {
                     coin.setAnimation("filled_even_coin.json");
                     coin.playAnimation();
                 } else {
@@ -583,8 +580,8 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             tv_text.setText("MS" + milestone.getMilestoneNumber() + ":" + milestone.getMilestoneText());
 
-            String date[]=milestone.getMilestoneStartdate().split("/");
-            String strDate=date[0]+"|"+date[1];
+            String date[] = milestone.getMilestoneStartdate().split("/");
+            String strDate = date[0] + "|" + date[1];
 
             tv_date.setText(strDate);
 
@@ -595,10 +592,10 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         if (isPreviousMilestoneComleted(pos)) {
 
                             if (milestone.getMilestone_iscomplete() == 0) {
-                                if (milestone.isPlayed()) {
-                                    openUpdateDialog(milestone, getAdapterPosition(), iv_disable,"anim_even_coin.json");
+                                if (milestone.getMilestoneIsplayed() == 1) {
+                                    openUpdateDialog(milestone, getAdapterPosition(), iv_disable, "anim_even_coin.json");
                                 } else {
-                                    playAnimation(milestone, pos, "anim_even.json" );
+                                    playAnimation(milestone, pos, "anim_even.json");
                                 }
                             } else {
                                 Toast.makeText(context, "milestone already completed", Toast.LENGTH_LONG).show();
@@ -632,10 +629,9 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         break;
                 }
 
-            } else if (milestone.isPlayed()) {
+            } else if (milestone.getMilestoneIsplayed() == 1) {
                 lotti.setAnimation("filled_even.json");
                 lotti.playAnimation();
-
 
                 tv_date.setBackgroundResource(R.drawable.bg_rect_purple);
                 tv_date.setTextColor(context.getResources().getColor(R.color.colorDarkPurple));
@@ -646,7 +642,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
             if (isPreviousMilestoneComleted(pos)) {
                 if (milestone.getMilestone_iscomplete() == 0) {
-                    if (!milestone.isPlayed()) {
+                    if (milestone.getMilestoneIsplayed() == 0) {
                         playAnimation(milestone, pos, "anim_even.json");
                     }
                 }
@@ -686,12 +682,12 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         dialog.dismiss();
                         milestoneModel.setMilestone_iscomplete(1);
                         milestoneModel.setMilestoneStatus(COMPLETED);
-                        milestoneModel.setMilestoneTime(System.currentTimeMillis()+"");
+                        milestoneModel.setMilestoneTime(System.currentTimeMillis() + "");
 //                    notifyItemChanged(pos);
                         iv_disable.setImageResource(R.drawable.ic_enabled);
                         msinterface.onmilestoneUpdate(milestoneModel);
 
-                        notifyItemChanged(pos+1);
+                        notifyItemChanged(pos + 1);
 
                         if (coin != null) {
                             if (coin.getVisibility() == View.VISIBLE) {
@@ -708,7 +704,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                         milestoneModel.setMilestone_iscomplete(1);
                         milestoneModel.setMilestoneStatus(NOT_COMPLETED);
-                        milestoneModel.setMilestoneTime(System.currentTimeMillis()+"");
+                        milestoneModel.setMilestoneTime(System.currentTimeMillis() + "");
 //                    notifyItemChanged(pos);
                         iv_disable.setImageResource(R.drawable.ic_close_enabled);
                         msinterface.onmilestoneUpdate(milestoneModel);
@@ -726,7 +722,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         dialog.dismiss();
                         milestoneModel.setMilestone_iscomplete(1);
                         milestoneModel.setMilestoneStatus(PARTIALLY_COMPLETED);
-                        milestoneModel.setMilestoneTime(System.currentTimeMillis()+"");
+                        milestoneModel.setMilestoneTime(System.currentTimeMillis() + "");
                         notifyItemChanged(pos);
                         msinterface.onmilestoneUpdate(milestoneModel);
 
@@ -744,7 +740,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         }
 
-        private void playAnimation(final MilestoneModel milestoneModel,final int pos, final String animName) {
+        private void playAnimation(final MilestoneModel milestoneModel, final int pos, final String animName) {
             lotti.setAnimation(animName);
             lotti.playAnimation();
             lotti.addAnimatorListener(new Animator.AnimatorListener() {
@@ -756,6 +752,8 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 @Override
                 public void onAnimationEnd(Animator animator) {
                     milestoneModel.setPlayed(true);
+                    milestoneModel.setMilestoneIsplayed(1);
+                    msinterface.onmilestonePlayStatusUpdate(milestoneModel);
 
                     tv_date.setBackgroundResource(R.drawable.bg_rect_purple);
                     tv_date.setTextColor(context.getResources().getColor(R.color.colorDarkPurple));
@@ -764,10 +762,8 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     tv_text.setTextColor(context.getResources().getColor(R.color.colorDarkPurple));
                     iv_disable.setImageResource(R.drawable.ic_unfilled_enabled);
 
-//                notifyItemChanged(pos);
+//                  notifyItemChanged(pos);
                     isRunning = false;
-
-
 
                 }
 
@@ -801,14 +797,12 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             Date d1 = sdf.parse(data);
             Date d2 = sdf.parse(milestoneModels.get(pos).getMilestoneStartdate());
 
-            if(d1.after(d2)) {
-                isAfter=true;
-            }
-            else if(d1.before(d2)) {
-                isAfter=false;
-            }
-            else if(d1.equals(d2)) {
-                isAfter=true;
+            if (d1.after(d2)) {
+                isAfter = true;
+            } else if (d1.before(d2)) {
+                isAfter = false;
+            } else if (d1.equals(d2)) {
+                isAfter = true;
             }
 
         } catch (ParseException e) {
@@ -816,7 +810,6 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
         return isAfter;
     }
-
 
     @Override
     public int getItemViewType(int position) {
@@ -834,6 +827,7 @@ public class Motionpathadapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public interface MilestoneInterface {
         void onmilestoneUpdate(MilestoneModel milestoneModel);
-    }
 
+        void onmilestonePlayStatusUpdate(MilestoneModel milestoneModel);
+    }
 }

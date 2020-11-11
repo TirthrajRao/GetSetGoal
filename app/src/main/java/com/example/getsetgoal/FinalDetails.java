@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
@@ -42,7 +43,7 @@ public class FinalDetails extends AppCompatActivity {
 
         database = openOrCreateDatabase("goalDb", Context.MODE_PRIVATE, null);
         database.execSQL("create table  if not exists GoalDetails (Goal_id integer primary key autoincrement,Goal_Name text,Goal_Startdate text,Goal_Enddate text,Goal_State integer default 1,GoalCreatedDate text,GoalUpdatedDate text)");
-        database.execSQL("create table  if not exists MilestoneDetails (Milestone_id integer primary key autoincrement,Goal_id integer,Milestone_Number integer,Milestone_Text text,Milestone_Days integer,Milestone_Startdate text,Milestone_Enddate text,Milestone_Iscomplete integer,Milestone_Status text,Milestone_Time text,foreign key(Goal_id) references GoalDetails(Goal_id))");
+        database.execSQL("create table  if not exists MilestoneDetails (Milestone_id integer primary key autoincrement,Goal_id integer,Milestone_Number integer,Milestone_Text text,Milestone_Days integer,Milestone_Startdate text,Milestone_Enddate text,Milestone_Iscomplete integer,Milestone_Isplayed integer,Milestone_Status text,Milestone_Time text,foreign key(Goal_id) references GoalDetails(Goal_id))");
 
         Cursor cur = database.rawQuery("select * from GoalDetails ", null);
         if (cur != null) {
@@ -58,8 +59,7 @@ public class FinalDetails extends AppCompatActivity {
                 tab.addTab(tab.newTab().setText(goalnames.get(i) + ""));
             }
 
-            TabAdapter adapter = new TabAdapter
-                    (getSupportFragmentManager(), tab.getTabCount());
+            TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), tab.getTabCount());
             vp.setAdapter(adapter);
             vp.setOffscreenPageLimit(1);
             vp.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tab));
@@ -68,14 +68,14 @@ public class FinalDetails extends AppCompatActivity {
                 tab.getTabAt(i).setText("G " + (i + 1));
             }
 
-
         }
 
-        if(id.size()==0){
-            Intent in = new Intent(FinalDetails.this,MainActivity.class);
+        if (id.size() == 0) {
+            Intent in = new Intent(FinalDetails.this, MainActivity.class);
             startActivity(in);
             finish();
         }
+
 
     }
 
@@ -99,7 +99,7 @@ public class FinalDetails extends AppCompatActivity {
 
                 }
                 return true;
-            case R.id.edit1 :
+            case R.id.edit1:
                 int k = tab.getSelectedTabPosition();
                 String name = goalnames.get(k);
 
@@ -112,6 +112,7 @@ public class FinalDetails extends AppCompatActivity {
                     int milestonestartdateindex = cur1.getColumnIndex("Milestone_Startdate");
                     int milestoneenddateindex = cur1.getColumnIndex("Milestone_Enddate");
                     int milestoneIscompletedindex = cur1.getColumnIndex("Milestone_Iscomplete");
+                    int milestoneIsplayedindex = cur1.getColumnIndex("Milestone_Isplayed");
                     int milestoneStatusindex = cur1.getColumnIndex("Milestone_Status");
                     int milestoneTimeindex = cur1.getColumnIndex("Milestone_Time");
                     while (cur1.moveToNext()) {
@@ -121,9 +122,10 @@ public class FinalDetails extends AppCompatActivity {
                         String milestonestartdate = cur1.getString(milestonestartdateindex);
                         String milestoneenddate = cur1.getString(milestoneenddateindex);
                         int milestoneIscompleted = cur1.getInt(milestoneIscompletedindex);
+                        int milestoneIsplayed = cur1.getInt(milestoneIsplayedindex);
                         String milestoneStatus = cur1.getString(milestoneStatusindex);
                         String milestoneTime = cur1.getString(milestoneTimeindex);
-                        milestonedata.add(new MilestoneModel(milestonenumber, milestonedays, milestonetext, milestonestartdate, milestoneenddate,milestoneIscompleted,milestoneStatus,milestoneTime));
+                        milestonedata.add(new MilestoneModel(name,milestonenumber, milestonedays, milestonetext, milestonestartdate, milestoneenddate, milestoneIscompleted, milestoneIsplayed, milestoneStatus, milestoneTime));
                     }
                 }
                 Intent i = new Intent(FinalDetails.this, ClickAndPickEdit.class);
@@ -158,16 +160,23 @@ public class FinalDetails extends AppCompatActivity {
             this.mNumOfTabs = NumOfTabs;
         }
 
+
         @Override
         public Fragment getItem(int position) {
             return MilestonesFragment.addfrag(goalnames.get(position), id.get(position));
-           // return GoalFragment.addfrag(goalnames.get(position), id.get(position));
+            // return GoalFragment.addfrag(goalnames.get(position), id.get(position));
         }
 
         @Override
         public int getCount() {
             return mNumOfTabs;
         }
+    }
+
+    public boolean isCurrentVisibleFragment(String loadedGoal) {
+        int pos = tab.getSelectedTabPosition();
+        String currentGoal = goalnames.get(pos);
+        return currentGoal.equals(loadedGoal);
     }
 
 }

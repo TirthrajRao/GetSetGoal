@@ -10,6 +10,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +33,6 @@ public class MilestonesFragment extends Fragment {
 
     int completedms=0;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_milestones, container, false);
@@ -40,6 +41,7 @@ public class MilestonesFragment extends Fragment {
         name = getArguments().getString("name");
         gname.setText("Goal - " + name);
         id = getArguments().getInt("id");
+        Log.v("currentfragment",name+":"+id);
         database = requireActivity().openOrCreateDatabase("goalDb", Context.MODE_PRIVATE, null);
         Cursor cur1 = database.rawQuery("select * from MilestoneDetails where Goal_id='" + id + "' ", null);
         if (cur1 != null) {
@@ -49,6 +51,7 @@ public class MilestonesFragment extends Fragment {
             int milestonestartdateindex = cur1.getColumnIndex("Milestone_Startdate");
             int milestoneenddateindex = cur1.getColumnIndex("Milestone_Enddate");
             int milestoneIscompletedIndex = cur1.getColumnIndex("Milestone_Iscomplete");
+            int milestoneIsplayedIndex = cur1.getColumnIndex("Milestone_Isplayed");
             int milestoneStatusindex = cur1.getColumnIndex("Milestone_Status");
             int milestoneTimeindex = cur1.getColumnIndex("Milestone_Time");
             while (cur1.moveToNext()) {
@@ -58,10 +61,11 @@ public class MilestonesFragment extends Fragment {
                 String milestonestartdate = cur1.getString(milestonestartdateindex);
                 String milestoneenddate = cur1.getString(milestoneenddateindex);
                 int milestoneIscompleted = cur1.getInt(milestoneIscompletedIndex);
+                int milestoneIsplayed = cur1.getInt(milestoneIsplayedIndex);
                 completedms=completedms+milestoneIscompleted;
                 String milestoneStatus = cur1.getString(milestoneStatusindex);
                 String milestoneTime = cur1.getString(milestoneTimeindex);
-                milestonedata.add(new MilestoneModel(milestonenumber, milestonedays, milestonetext, milestonestartdate, milestoneenddate,milestoneIscompleted,milestoneStatus,milestoneTime));
+                milestonedata.add(new MilestoneModel(name,milestonenumber, milestonedays, milestonetext, milestonestartdate, milestoneenddate,milestoneIscompleted,milestoneIsplayed,milestoneStatus,milestoneTime));
             }
 
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());
@@ -74,8 +78,16 @@ public class MilestonesFragment extends Fragment {
                 public void onmilestoneUpdate(final MilestoneModel milestoneModel){
                     ContentValues cv = new ContentValues();
                     cv.put("Milestone_Iscomplete",milestoneModel.getMilestone_iscomplete()); //These Fields should be your String values of actual column names
+                    cv.put("Milestone_Isplayed",milestoneModel.getMilestoneIsplayed()); //These Fields should be your String values of actual column names
                     cv.put("Milestone_Status",milestoneModel.getMilestoneStatus()); //These Fields should be your String values of actual column names
                     cv.put("Milestone_Time",milestoneModel.getMilestoneTime()); //These Fields should be your String values of actual column names
+                    database.update("MilestoneDetails", cv, "Milestone_Number="+milestoneModel.getMilestoneNumber()+" AND "+"Goal_id="+id, null);
+                }
+
+                @Override
+                public void onmilestonePlayStatusUpdate(MilestoneModel milestoneModel) {
+                    ContentValues cv = new ContentValues();
+                    cv.put("Milestone_Isplayed",milestoneModel.getMilestoneIsplayed()); //These Fields should be your String values of actual column names
                     database.update("MilestoneDetails", cv, "Milestone_Number="+milestoneModel.getMilestoneNumber()+" AND "+"Goal_id="+id, null);
                 }
             },(milestonedata.size()==completedms) ? true : false);
@@ -83,7 +95,21 @@ public class MilestonesFragment extends Fragment {
             msdata.post(new Runnable() {
                 @Override
                 public void run() {
-                    msdata.smoothScrollToPosition(0);
+                    int inCompletePos=0;
+                    boolean isAllComplete=true;
+                    for(MilestoneModel model: milestonedata){
+                        if(model.getMilestone_iscomplete()==0) {
+                            inCompletePos=milestonedata.indexOf(model);
+                            isAllComplete=false;
+                            break;
+                        }
+                    }
+                    if(isAllComplete) {
+                        msdata.smoothScrollToPosition(milestonedata.size()-1);
+                    }
+                    else {
+                        msdata.smoothScrollToPosition(inCompletePos);
+                    }
                 }
             });
 
@@ -102,6 +128,9 @@ public class MilestonesFragment extends Fragment {
         args.putString("name", val);
         args.putInt("id", val2);
         fragment.setArguments(args);
+
+        Log.v("fragments",val+":"+val2);
         return fragment;
     }
+
 }

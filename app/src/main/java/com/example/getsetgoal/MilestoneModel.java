@@ -17,6 +17,11 @@ public class MilestoneModel implements Serializable {
 
     boolean isPlayed=false;
 
+    int milestoneIsplayed=0;
+
+
+
+    String goalName;
     public boolean isPlayed() {
         return isPlayed;
     }
@@ -25,15 +30,17 @@ public class MilestoneModel implements Serializable {
     }
 
 
-    public MilestoneModel(int milestoneNumber, int milstonedays, String milestoneText, String milestoneStartdate, String milestoneEnddate,int milestone_iscomplete,String milestoneStatus,String milestoneTime) {
+    public MilestoneModel(String goalName,int milestoneNumber, int milstonedays, String milestoneText, String milestoneStartdate, String milestoneEnddate,int milestone_iscomplete,int milestoneIsplayed,String milestoneStatus,String milestoneTime) {
         this.milestoneNumber = milestoneNumber;
         this.milstonedays = milstonedays;
         this.milestoneText = milestoneText;
         this.milestoneStartdate = milestoneStartdate;
         this.milestoneEnddate = milestoneEnddate;
         this.milestone_iscomplete=milestone_iscomplete;
+        this.milestoneIsplayed=milestoneIsplayed;
         this.milestoneStatus=milestoneStatus;
         this.milestoneTime=milestoneTime;
+        this.goalName=goalName;
     }
 
     public MilestoneModel(int milstonedays, String milestoneText) {
@@ -103,5 +110,21 @@ public class MilestoneModel implements Serializable {
 
     public void setMilestone_iscomplete(int milestone_iscomplete) {
         this.milestone_iscomplete = milestone_iscomplete;
+    }
+
+    public int getMilestoneIsplayed() {
+        return milestoneIsplayed;
+    }
+
+    public void setMilestoneIsplayed(int milestoneIsplayed) {
+        this.milestoneIsplayed = milestoneIsplayed;
+    }
+
+    public String getGoalName() {
+        return goalName;
+    }
+
+    public void setGoalName(String goalName) {
+        this.goalName = goalName;
     }
 }

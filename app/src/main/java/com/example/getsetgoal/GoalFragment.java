@@ -43,6 +43,7 @@ public class GoalFragment extends Fragment {
             int milestonestartdateindex = cur1.getColumnIndex("Milestone_Startdate");
             int milestoneenddateindex = cur1.getColumnIndex("Milestone_Enddate");
             int milestoneIscompletedindex = cur1.getColumnIndex("Milestone_Iscomplete");
+            int milestoneIsplayedindex = cur1.getColumnIndex("Milestone_Isplayed");
             int milestoneStatusindex = cur1.getColumnIndex("Milestone_Status");
             int milestoneTimeindex = cur1.getColumnIndex("Milestone_Time");
 
@@ -53,9 +54,10 @@ public class GoalFragment extends Fragment {
                 String milestonestartdate = cur1.getString(milestonestartdateindex);
                 String milestoneenddate = cur1.getString(milestoneenddateindex);
                 int milestoneIscompleted = cur1.getInt(milestoneIscompletedindex);
+                int milestoneIsplayed= cur1.getInt(milestoneIsplayedindex);
                 String milestoneStatus = cur1.getString(milestoneStatusindex);
                 String milestoneTime = cur1.getString(milestoneTimeindex);
-                milestonedata.add(new MilestoneModel(milestonenumber, milestonedays, milestonetext, milestonestartdate, milestoneenddate,milestoneIscompleted,milestoneStatus,milestoneTime));
+                milestonedata.add(new MilestoneModel(name,milestonenumber, milestonedays, milestonetext, milestonestartdate, milestoneenddate,milestoneIscompleted,milestoneIsplayed,milestoneStatus,milestoneTime));
             }
 
 
